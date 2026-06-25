@@ -386,6 +386,138 @@ header {
 .role-box-body { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
 .role-box-body strong { color: var(--text-primary); font-weight: 600; }
 
+
+/* ── PAGE 4: ZOEKWOORDEN GAPS ── */
+#page-keywords { width: 100%; }
+.kw-hero {
+  max-width: 1400px; margin: 2rem auto 0;
+  padding: 2rem 2.5rem 1.5rem;
+  border-left: 3px solid var(--purple);
+  background: var(--bg);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow-sm);
+}
+.kw-section { max-width: 1400px; margin: 0 auto; padding: 1.5rem 2.5rem 3rem; min-width: 0; }
+.kw-stats { display: grid; grid-template-columns: repeat(5, auto); gap: 10px; margin-bottom: 1.5rem; justify-content: start; }
+.kw-stat { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 18px; box-shadow: var(--shadow-sm); }
+.kw-stat-num { font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+.kw-stat-num.ja { color: #1A7A6E; }
+.kw-stat-num.mis { color: #D4860A; }
+.kw-stat-num.nee { color: #C0442A; }
+.kw-stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.kw-legend {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 1.25rem; padding: 10px 16px;
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 12px; color: var(--text-muted);
+}
+.kw-legend span { display: flex; align-items: center; gap: 6px; }
+.kw-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 1.25rem; }
+.kw-filters input[type=text] {
+  flex: 1; min-width: 200px; max-width: 340px;
+  padding: 7px 12px; border: 1px solid var(--border);
+  border-radius: 7px; font-family: 'Inter', sans-serif;
+  font-size: 13px; color: var(--text-primary); background: var(--bg);
+}
+.kw-filters input[type=text]:focus { outline: none; border-color: var(--accent); }
+.kw-filters select {
+  padding: 7px 10px; border: 1px solid var(--border);
+  border-radius: 7px; font-family: 'Inter', sans-serif;
+  font-size: 13px; color: var(--text-secondary); background: var(--bg); cursor: pointer;
+}
+.kw-save-btn {
+  margin-left: auto; padding: 7px 18px;
+  border-radius: 7px; border: 1px solid var(--border);
+  background: var(--bg); font-family: 'Inter', sans-serif;
+  font-size: 13px; color: var(--text-primary); cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.kw-save-btn:hover { background: var(--bg-soft); }
+.kw-count { font-size: 12px; color: var(--text-muted); }
+.kw-scroll-mirror {
+  position: sticky; bottom: 0; z-index: 20;
+  overflow-x: auto; overflow-y: hidden;
+  height: 10px;
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+}
+.kw-scroll-mirror::-webkit-scrollbar { height: 6px; }
+.kw-scroll-mirror::-webkit-scrollbar-track { background: var(--bg-soft); }
+.kw-scroll-mirror::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+.kw-scroll-inner { height: 1px; }
+.kw-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.kw-table-wrap::-webkit-scrollbar { display: none; }
+.kw-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  min-width: 1100px;
+}
+.kw-table thead th {
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+  text-align: left; padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap; cursor: pointer; user-select: none;
+  background: var(--bg-soft);
+}
+.kw-table thead th:hover { color: var(--text-primary); }
+.kw-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+.kw-table tbody tr:hover { background: var(--bg-card-hover); }
+.kw-table td { padding: 8px 10px; vertical-align: middle; }
+.kw-kw { font-weight: 600; color: var(--text-primary); font-size: 13px; }
+.kw-vb { display: flex; align-items: center; gap: 7px; }
+.kw-bar { height: 5px; border-radius: 3px; background: #2A9D8F; flex-shrink: 0; }
+.kw-vnum { font-size: 12px; color: var(--text-primary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kw-comp-H { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: #FDEEE9; color: #C0442A; white-space: nowrap; }
+.kw-comp-N { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: #FDF3E0; color: #D4860A; white-space: nowrap; }
+.kw-comp-L { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: #E8F5F3; color: #1A7A6E; white-space: nowrap; }
+.kw-bid { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }
+.kw-tu { color: #1A7A6E; font-size: 12px; white-space: nowrap; }
+.kw-td { color: #C0442A; font-size: 12px; white-space: nowrap; }
+.kw-tf { color: var(--text-muted); font-size: 12px; white-space: nowrap; }
+.kw-oG { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #E8F5F3; color: #1A7A6E; white-space: nowrap; }
+.kw-oBd { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #FDF3E0; color: #D4860A; white-space: nowrap; }
+.kw-oBv { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #FDEEE9; color: #C0442A; white-space: nowrap; }
+.kw-oW { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #F0EBFA; color: #6B4FA0; white-space: nowrap; }
+.kw-trg { font-size: 10px; color: var(--text-muted); font-style: italic; margin-top: 2px; }
+.kw-isel {
+  font-size: 12px; border-radius: 20px;
+  border: 1px solid var(--border); padding: 3px 10px;
+  background: var(--bg); color: var(--text-secondary);
+  cursor: pointer; font-family: 'Inter', sans-serif;
+}
+.kw-isel.ja { background: #E8F5F3; color: #1A7A6E; border-color: #2A9D8F; }
+.kw-isel.misschien { background: #FDF3E0; color: #D4860A; border-color: #D4860A; }
+.kw-isel.nee { background: #FDEEE9; color: #C0442A; border-color: #C0442A; }
+.kw-lp {
+  font-size: 12px; padding: 4px 8px;
+  border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text-primary);
+  width: 100%; min-width: 160px; font-family: 'Inter', sans-serif;
+}
+.kw-lp:focus { outline: none; border-color: var(--accent); }
+.kw-lp::placeholder { color: var(--text-muted); }
+.kw-more-bar {
+  display: none; align-items: center; justify-content: center;
+  gap: 14px; padding: 1.5rem 0;
+  border-top: 1px solid var(--border); margin-top: 4px;
+}
+.kw-more-btn {
+  padding: 8px 22px; border-radius: 7px;
+  border: 1px solid var(--border); background: var(--bg);
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  color: var(--text-primary); cursor: pointer;
+}
+.kw-more-btn:hover { background: var(--bg-soft); }
+.kw-more-info { font-size: 12px; color: var(--text-muted); }
+.kw-empty { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 13px; }
+.kw-toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--text-primary); color: #fff;
+  padding: 10px 18px; border-radius: 8px;
+  font-size: 13px; display: none; z-index: 200;
+  box-shadow: var(--shadow-md);
+}
+
 </style>
 </head>
 <body>
@@ -402,6 +534,7 @@ header {
     <button class="tab-btn active" onclick="showPage('topics',this)">Content Topics</button>
     <button class="tab-btn" onclick="showPage('video',this)">Video Tips</button>
     <button class="tab-btn" onclick="showPage('instagram',this)">Instagram Beheer</button>
+    <button class="tab-btn" onclick="showPage('keywords',this)">Zoekwoorden Gaps</button>
   </nav>
   <div class="header-badge">Juni 2026</div>
 </header>
@@ -1052,11 +1185,254 @@ function showPage(id, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   btn.classList.add('active');
+  if (id === 'keywords') { kwOpen(); }
 }
 
 renderTopics();
 renderExamples();
 renderMicro();
+
+// ── ZOEKWOORDEN GAPS ──
+const KW_DATA=[{"kw":"warmtepompboiler","vol":4400,"comp":"Hoog","bl":"0.69","bh":"2.17","t3":"-33%","ty":"-18%","ov":"G","tr":""},{"kw":"boiler met warmtepomp","vol":4400,"comp":"Hoog","bl":"0.69","bh":"2.17","t3":"-33%","ty":"-18%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"warmtepomp met boiler","vol":4400,"comp":"Hoog","bl":"0.69","bh":"2.17","t3":"-33%","ty":"-18%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"boiler voor warmtepomp","vol":4400,"comp":"Hoog","bl":"0.69","bh":"2.17","t3":"-33%","ty":"-18%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"warmtepomp lucht lucht","vol":2400,"comp":"Hoog","bl":"0.87","bh":"2.57","t3":"-17%","ty":"0%","ov":"G","tr":""},{"kw":"luchtwaterwarmtepomp","vol":2400,"comp":"Hoog","bl":"0.83","bh":"2.86","t3":"-34%","ty":"-21%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp","vol":2400,"comp":"Hoog","bl":"0.87","bh":"2.57","t3":"-17%","ty":"0%","ov":"G","tr":""},{"kw":"hybride warmtepompen","vol":1900,"comp":"Hoog","bl":"0.63","bh":"2.35","t3":"-55%","ty":"-19%","ov":"G","tr":""},{"kw":"hybriden warmtepomp","vol":1900,"comp":"Hoog","bl":"0.63","bh":"2.35","t3":"-55%","ty":"-19%","ov":"G","tr":""},{"kw":"hybride warmtepomp","vol":1900,"comp":"Hoog","bl":"0.63","bh":"2.35","t3":"-55%","ty":"-19%","ov":"G","tr":""},{"kw":"hybridewarmtepomp","vol":1900,"comp":"Hoog","bl":"0.63","bh":"2.35","t3":"-55%","ty":"-19%","ov":"G","tr":""},{"kw":"warmtepomp geothermisch","vol":1600,"comp":"Hoog","bl":"0.97","bh":"3.47","t3":"-32%","ty":"-19%","ov":"G","tr":""},{"kw":"warmtepomp met radiatoren","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"radiator warmtepomp","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"warmtepomp boiler","vol":880,"comp":"Hoog","bl":"0.67","bh":"2.15","t3":"-45%","ty":"-18%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"warmtepomp radiatoren","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"warmtepomp voor radiatoren","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"radiatoren warmtepomp","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"warmtepomp en radiatoren","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"radiatoren voor warmtepomp","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"warmtepomp op radiatoren","vol":880,"comp":"Hoog","bl":"0.56","bh":"1.94","t3":"-45%","ty":"-18%","ov":"G","tr":""},{"kw":"prijs lucht water warmtepomp","vol":720,"comp":"Hoog","bl":"0.92","bh":"3.02","t3":"-41%","ty":"0%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"water lucht warmtepomp prijs","vol":720,"comp":"Hoog","bl":"0.92","bh":"3.02","t3":"-41%","ty":"0%","ov":"Bv","tr":"lucht lucht warmtepomp prijs"},{"kw":"lucht water warmtepomp prijs","vol":720,"comp":"Hoog","bl":"0.92","bh":"3.02","t3":"-41%","ty":"0%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"warmtepomp lucht water prijs","vol":720,"comp":"Hoog","bl":"0.92","bh":"3.02","t3":"-41%","ty":"0%","ov":"Bv","tr":"lucht lucht warmtepomp prijs"},{"kw":"installateur warmtepomp","vol":720,"comp":"Hoog","bl":"1.78","bh":"7.17","t3":"-46%","ty":"-56%","ov":"G","tr":""},{"kw":"werking van warmtepomp","vol":590,"comp":"Normaal","bl":"0.11","bh":"0.77","t3":"-33%","ty":"-33%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"warmteboiler","vol":590,"comp":"Hoog","bl":"0.48","bh":"2.04","t3":"-45%","ty":"-33%","ov":"G","tr":""},{"kw":"werking van een warmtepomp","vol":590,"comp":"Normaal","bl":"0.11","bh":"0.77","t3":"-33%","ty":"-33%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"prijzen warmtepomp lucht lucht","vol":590,"comp":"Hoog","bl":"0.85","bh":"2.28","t3":"-18%","ty":"0%","ov":"Bd","tr":"warmtepomp lucht water prijzen"},{"kw":"warmtepompen lucht lucht prijzen","vol":590,"comp":"Hoog","bl":"0.85","bh":"2.28","t3":"-18%","ty":"0%","ov":"Bv","tr":"prijzen van warmtepompen"},{"kw":"verwarming met warmtepomp","vol":590,"comp":"Hoog","bl":"0.72","bh":"2.52","t3":"-56%","ty":"-56%","ov":"Bv","tr":"warmtepomp voor verwarming"},{"kw":"verwarming warmtepomp","vol":590,"comp":"Hoog","bl":"0.72","bh":"2.52","t3":"-56%","ty":"-56%","ov":"Bv","tr":"warmtepomp voor verwarming"},{"kw":"prijzen lucht lucht warmtepomp","vol":590,"comp":"Hoog","bl":"0.85","bh":"2.28","t3":"-18%","ty":"0%","ov":"Bd","tr":"warmtepomp lucht water prijzen"},{"kw":"vloerverwarming warmtepomp","vol":480,"comp":"Hoog","bl":"0.86","bh":"2.59","t3":"-46%","ty":"-19%","ov":"Bv","tr":"vloerverwarming met warmtepomp"},{"kw":"warmtepomp vloerverwarming","vol":480,"comp":"Hoog","bl":"0.86","bh":"2.59","t3":"-46%","ty":"-19%","ov":"Bv","tr":"vloerverwarming met warmtepomp"},{"kw":"warmtepomp onderhoud","vol":480,"comp":"Normaal","bl":"0.88","bh":"5.19","t3":"-34%","ty":"-34%","ov":"G","tr":""},{"kw":"onderhoud warmtepomp","vol":480,"comp":"Normaal","bl":"0.88","bh":"5.19","t3":"-34%","ty":"-34%","ov":"G","tr":""},{"kw":"warmtepomp voor vloerverwarming","vol":480,"comp":"Hoog","bl":"0.86","bh":"2.59","t3":"-46%","ty":"-19%","ov":"Bv","tr":"vloerverwarming met warmtepomp"},{"kw":"warmtepomp installateur","vol":320,"comp":"Hoog","bl":"2.96","bh":"10.43","t3":"-33%","ty":"-18%","ov":"G","tr":""},{"kw":"warmtepomp op zonnepanelen","vol":260,"comp":"Hoog","bl":"1.23","bh":"5.39","t3":"-46%","ty":"-34%","ov":"G","tr":""},{"kw":"warmtepomp zonnepanelen","vol":260,"comp":"Hoog","bl":"1.23","bh":"5.39","t3":"-46%","ty":"-34%","ov":"G","tr":""},{"kw":"warmtepomp met zonnepanelen","vol":260,"comp":"Hoog","bl":"1.23","bh":"5.39","t3":"-46%","ty":"-34%","ov":"G","tr":""},{"kw":"zonnepanelen en warmtepomp","vol":260,"comp":"Hoog","bl":"1.23","bh":"5.39","t3":"-46%","ty":"-34%","ov":"G","tr":""},{"kw":"zonnepanelen warmtepomp","vol":260,"comp":"Hoog","bl":"1.23","bh":"5.39","t3":"-46%","ty":"-34%","ov":"G","tr":""},{"kw":"warmtepompen kopen","vol":260,"comp":"Hoog","bl":"1.30","bh":"4.36","t3":"-34%","ty":"-19%","ov":"G","tr":""},{"kw":"warmtepomp en zonnepanelen","vol":260,"comp":"Hoog","bl":"1.23","bh":"5.39","t3":"-46%","ty":"-34%","ov":"G","tr":""},{"kw":"warmtepomp koop","vol":260,"comp":"Hoog","bl":"1.30","bh":"4.36","t3":"-34%","ty":"-19%","ov":"G","tr":""},{"kw":"kosten warmtepomp met radiatoren","vol":260,"comp":"Hoog","bl":"0.65","bh":"1.59","t3":"-56%","ty":"-47%","ov":"G","tr":""},{"kw":"warmtepomp op lucht","vol":210,"comp":"Hoog","bl":"0.81","bh":"2.24","t3":"-19%","ty":"-19%","ov":"G","tr":""},{"kw":"cop warmtepomp","vol":210,"comp":"Laag","bl":"0.02","bh":"0.91","t3":"-35%","ty":"-47%","ov":"G","tr":""},{"kw":"warmtepomp op cv","vol":170,"comp":"Hoog","bl":"0.78","bh":"2.65","t3":"-72%","ty":"-57%","ov":"G","tr":""},{"kw":"cv warmtepomp","vol":170,"comp":"Hoog","bl":"0.78","bh":"2.65","t3":"-72%","ty":"-57%","ov":"G","tr":""},{"kw":"cv met warmtepomp","vol":170,"comp":"Hoog","bl":"0.78","bh":"2.65","t3":"-72%","ty":"-57%","ov":"G","tr":""},{"kw":"warmtepomp cv","vol":170,"comp":"Hoog","bl":"0.78","bh":"2.65","t3":"-72%","ty":"-57%","ov":"G","tr":""},{"kw":"warmtepomp plaatsen","vol":170,"comp":"Hoog","bl":"1.55","bh":"6.13","t3":"-21%","ty":"-48%","ov":"G","tr":""},{"kw":"geothermische energie","vol":170,"comp":"Laag","bl":"0.67","bh":"2.00","t3":"-35%","ty":"-35%","ov":"G","tr":""},{"kw":"geo thermische energie","vol":170,"comp":"Laag","bl":"0.67","bh":"2.00","t3":"-35%","ty":"-35%","ov":"G","tr":""},{"kw":"koeling met warmtepomp","vol":170,"comp":"Hoog","bl":"0.39","bh":"1.69","t3":"136%","ty":"0%","ov":"G","tr":""},{"kw":"plaats warmtepomp","vol":170,"comp":"Hoog","bl":"1.55","bh":"6.13","t3":"-21%","ty":"-48%","ov":"G","tr":""},{"kw":"warmtepomp koeling","vol":170,"comp":"Hoog","bl":"0.39","bh":"1.69","t3":"136%","ty":"0%","ov":"G","tr":""},{"kw":"warmtepomp lucht water werking","vol":140,"comp":"Normaal","bl":"0.20","bh":"1.03","t3":"-47%","ty":"-47%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"lucht water warmtepomp werking","vol":140,"comp":"Normaal","bl":"0.20","bh":"1.03","t3":"-47%","ty":"-47%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"warmtepomp lucht lucht kostprijs","vol":140,"comp":"Hoog","bl":"0.71","bh":"2.09","t3":"0%","ty":"27%","ov":"Bv","tr":"warmtepomp kostprijs"},{"kw":"mijn verbouwpremie warmtepomp","vol":140,"comp":"Laag","bl":"0.37","bh":"2.93","t3":"-36%","ty":"-18%","ov":"G","tr":""},{"kw":"kostprijs lucht lucht warmtepomp","vol":140,"comp":"Hoog","bl":"0.71","bh":"2.09","t3":"0%","ty":"27%","ov":"Bv","tr":"warmtepomp kostprijs"},{"kw":"warmtepomp met grondboring","vol":140,"comp":"Normaal","bl":"1.17","bh":"3.56","t3":"-47%","ty":"-36%","ov":"Bv","tr":"grondboring warmtepomp"},{"kw":"werking lucht water warmtepomp","vol":140,"comp":"Normaal","bl":"0.20","bh":"1.03","t3":"-47%","ty":"-47%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"werking warmtepomp lucht water","vol":140,"comp":"Normaal","bl":"0.20","bh":"1.03","t3":"-47%","ty":"-47%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"kostprijs warmtepomp lucht lucht","vol":140,"comp":"Hoog","bl":"0.71","bh":"2.09","t3":"0%","ty":"27%","ov":"W","tr":"prijs warmtepomp"},{"kw":"premie warmtepomp vlaanderen","vol":140,"comp":"Normaal","bl":"0.33","bh":"2.01","t3":"-35%","ty":"-35%","ov":"G","tr":""},{"kw":"geothermische centrale","vol":110,"comp":"Laag","bl":"","bh":"","t3":"55%","ty":"-35%","ov":"G","tr":""},{"kw":"warmtepomp bodem water","vol":90,"comp":"Normaal","bl":"0.98","bh":"2.59","t3":"-36%","ty":"-50%","ov":"Bv","tr":"warmtepomp bodem"},{"kw":"bodem water warmtepomp","vol":90,"comp":"Normaal","bl":"0.98","bh":"2.59","t3":"-36%","ty":"-50%","ov":"Bv","tr":"warmtepomp bodem"},{"kw":"sanitair warm water warmtepomp","vol":90,"comp":"Hoog","bl":"0.73","bh":"2.31","t3":"-59%","ty":"-36%","ov":"Bv","tr":"warmtepomp water water"},{"kw":"rendement van een warmtepomp","vol":90,"comp":"Normaal","bl":"0.33","bh":"1.39","t3":"-55%","ty":"-64%","ov":"G","tr":""},{"kw":"warmtepomp installeren prijs","vol":90,"comp":"Hoog","bl":"1.11","bh":"3.57","t3":"-47%","ty":"-18%","ov":"G","tr":""},{"kw":"cv ketels hybride","vol":90,"comp":"Hoog","bl":"0.55","bh":"2.29","t3":"-36%","ty":"-18%","ov":"G","tr":""},{"kw":"warmtepomp voor sanitair warm water","vol":90,"comp":"Hoog","bl":"0.73","bh":"2.31","t3":"-59%","ty":"-36%","ov":"Bv","tr":"warmtepomp water water"},{"kw":"warmtepomp op bestaande radiatoren","vol":90,"comp":"Hoog","bl":"0.61","bh":"1.80","t3":"-59%","ty":"-22%","ov":"G","tr":""},{"kw":"warmtepomp sanitair warm water","vol":90,"comp":"Hoog","bl":"0.73","bh":"2.31","t3":"-59%","ty":"-36%","ov":"Bv","tr":"warmtepomp water water"},{"kw":"warmtepomp voor bestaande radiatoren","vol":90,"comp":"Hoog","bl":"0.61","bh":"1.80","t3":"-59%","ty":"-22%","ov":"G","tr":""},{"kw":"verbouwpremie warmtepomp","vol":90,"comp":"Laag","bl":"0.33","bh":"4.58","t3":"-29%","ty":"-29%","ov":"G","tr":""},{"kw":"prijs geothermische boring","vol":90,"comp":"Normaal","bl":"0.84","bh":"2.39","t3":"-18%","ty":"29%","ov":"Bv","tr":"geothermische boring"},{"kw":"vergelijk warmtepompen","vol":90,"comp":"Hoog","bl":"1.26","bh":"4.05","t3":"-59%","ty":"-22%","ov":"G","tr":""},{"kw":"boiler warmtepomp","vol":90,"comp":"Hoog","bl":"0.69","bh":"1.84","t3":"-36%","ty":"-22%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"cv ketel hybride","vol":90,"comp":"Hoog","bl":"0.55","bh":"2.29","t3":"-36%","ty":"-18%","ov":"G","tr":""},{"kw":"hybride cv ketel","vol":90,"comp":"Hoog","bl":"0.55","bh":"2.29","t3":"-36%","ty":"-18%","ov":"G","tr":""},{"kw":"hybride verwarmingsketel","vol":90,"comp":"Hoog","bl":"0.53","bh":"2.48","t3":"-64%","ty":"-56%","ov":"G","tr":""},{"kw":"rendement warmtepompen","vol":90,"comp":"Normaal","bl":"0.33","bh":"1.39","t3":"-55%","ty":"-64%","ov":"G","tr":""},{"kw":"rendement warmtepomp","vol":90,"comp":"Normaal","bl":"0.33","bh":"1.39","t3":"-55%","ty":"-64%","ov":"G","tr":""},{"kw":"warmtepomp rendement","vol":90,"comp":"Normaal","bl":"0.33","bh":"1.39","t3":"-55%","ty":"-64%","ov":"G","tr":""},{"kw":"warmtepomp bestaande radiatoren","vol":90,"comp":"Hoog","bl":"0.61","bh":"1.80","t3":"-59%","ty":"-22%","ov":"G","tr":""},{"kw":"installatie warmtepomp in bestaande woning","vol":70,"comp":"Hoog","bl":"1.11","bh":"3.29","t3":"-36%","ty":"0%","ov":"W","tr":"installatie warmtepomp"},{"kw":"nieuwbouw warmtepomp","vol":70,"comp":"Normaal","bl":"1.32","bh":"6.27","t3":"-50%","ty":"-60%","ov":"G","tr":""},{"kw":"premie warmtepomp aanvragen","vol":70,"comp":"Laag","bl":"0.27","bh":"2.37","t3":"-57%","ty":"-40%","ov":"G","tr":""},{"kw":"aanvraag premie warmtepomp","vol":70,"comp":"Laag","bl":"0.32","bh":"1.96","t3":"-29%","ty":"-29%","ov":"G","tr":""},{"kw":"warmtepomp nieuwbouw","vol":70,"comp":"Normaal","bl":"1.32","bh":"6.27","t3":"-50%","ty":"-60%","ov":"G","tr":""},{"kw":"warmtepomp zonder vloerverwarming","vol":70,"comp":"Normaal","bl":"0.60","bh":"2.03","t3":"-64%","ty":"-29%","ov":"Bv","tr":"vloerverwarming met warmtepomp"},{"kw":"premie aanvragen warmtepomp","vol":70,"comp":"Laag","bl":"0.34","bh":"1.92","t3":"-56%","ty":"-20%","ov":"G","tr":""},{"kw":"passieve koeling","vol":70,"comp":"Laag","bl":"0.35","bh":"1.44","t3":"80%","ty":"29%","ov":"G","tr":""},{"kw":"warmtepomp terugverdienen","vol":70,"comp":"Normaal","bl":"0.73","bh":"3.63","t3":"-64%","ty":"-55%","ov":"G","tr":""},{"kw":"beste warmtepomp lucht water","vol":70,"comp":"Hoog","bl":"0.96","bh":"2.96","t3":"-50%","ty":"-22%","ov":"Bv","tr":"warmtepomp water water"},{"kw":"beste lucht water warmtepomp","vol":70,"comp":"Hoog","bl":"0.96","bh":"2.96","t3":"-50%","ty":"-22%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"warmtepomp installeren in bestaande woning","vol":70,"comp":"Hoog","bl":"1.11","bh":"3.29","t3":"-36%","ty":"0%","ov":"Bv","tr":"warmtepomp woning"},{"kw":"warmtepomp met cv ketel","vol":70,"comp":"Hoog","bl":"0.64","bh":"3.43","t3":"-44%","ty":"-44%","ov":"G","tr":""},{"kw":"warmtepomp lucht water vloerverwarming","vol":70,"comp":"Hoog","bl":"0.82","bh":"2.28","t3":"-55%","ty":"-29%","ov":"Bv","tr":"vloerverwarming met warmtepomp"},{"kw":"warmtepompboilers","vol":70,"comp":"Hoog","bl":"0.90","bh":"2.64","t3":"-57%","ty":"-67%","ov":"G","tr":""},{"kw":"warmtepomp hybride","vol":70,"comp":"Hoog","bl":"0.93","bh":"3.07","t3":"-55%","ty":"-29%","ov":"G","tr":""},{"kw":"geothermie boringen","vol":70,"comp":"Normaal","bl":"1.23","bh":"3.98","t3":"-55%","ty":"-29%","ov":"G","tr":""},{"kw":"lucht water warmtepomp met vloerverwarming","vol":70,"comp":"Hoog","bl":"0.82","bh":"2.28","t3":"-55%","ty":"-29%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"warmtepomp water","vol":70,"comp":"Hoog","bl":"0.83","bh":"1.91","t3":"0%","ty":"-22%","ov":"Bv","tr":"warmtepomp water water"},{"kw":"water warmtepomp","vol":70,"comp":"Hoog","bl":"0.83","bh":"1.91","t3":"0%","ty":"-22%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"waterwarmtepomp","vol":70,"comp":"Hoog","bl":"0.83","bh":"1.91","t3":"0%","ty":"-22%","ov":"G","tr":""},{"kw":"beste warmtepompen lucht water","vol":70,"comp":"Hoog","bl":"0.96","bh":"2.96","t3":"-50%","ty":"-22%","ov":"G","tr":""},{"kw":"warmtepomp terugverdientijd","vol":70,"comp":"Normaal","bl":"0.73","bh":"3.63","t3":"-64%","ty":"-55%","ov":"G","tr":""},{"kw":"terugverdientijd warmtepomp","vol":70,"comp":"Normaal","bl":"0.73","bh":"3.63","t3":"-64%","ty":"-55%","ov":"G","tr":""},{"kw":"cv ketel en warmtepomp","vol":70,"comp":"Hoog","bl":"0.64","bh":"3.43","t3":"-44%","ty":"-44%","ov":"G","tr":""},{"kw":"cv ketel warmtepomp","vol":70,"comp":"Hoog","bl":"0.64","bh":"3.43","t3":"-44%","ty":"-44%","ov":"G","tr":""},{"kw":"warmtepomp cv ketel","vol":70,"comp":"Hoog","bl":"0.64","bh":"3.43","t3":"-44%","ty":"-44%","ov":"G","tr":""},{"kw":"lucht water warmtepomp vloerverwarming","vol":70,"comp":"Hoog","bl":"0.82","bh":"2.28","t3":"-55%","ty":"-29%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"cv ketel met warmtepomp","vol":70,"comp":"Hoog","bl":"0.64","bh":"3.43","t3":"-44%","ty":"-44%","ov":"G","tr":""},{"kw":"airco lucht lucht","vol":50,"comp":"Hoog","bl":"0.75","bh":"2.79","t3":"150%","ty":"0%","ov":"G","tr":""},{"kw":"warmtepomp in bestaande woning","vol":50,"comp":"Hoog","bl":"0.61","bh":"3.71","t3":"-67%","ty":"-40%","ov":"Bv","tr":"warmtepomp woning"},{"kw":"warmtepomp bestaande woning","vol":50,"comp":"Hoog","bl":"0.61","bh":"3.71","t3":"-67%","ty":"-40%","ov":"Bv","tr":"warmtepomp woning"},{"kw":"werking lucht lucht warmtepomp","vol":50,"comp":"Normaal","bl":"0.13","bh":"0.85","t3":"-40%","ty":"-40%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"warmtepomp boiler installateur","vol":50,"comp":"Hoog","bl":"1.62","bh":"6.17","t3":"-44%","ty":"67%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"werking warmtepomp lucht lucht","vol":50,"comp":"Normaal","bl":"0.13","bh":"0.85","t3":"-40%","ty":"-40%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"kosten warmtepomp installatie","vol":50,"comp":"Hoog","bl":"0.89","bh":"3.17","t3":"-40%","ty":"-73%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"vaillant geothermische warmtepomp","vol":50,"comp":"Hoog","bl":"0.57","bh":"2.22","t3":"0%","ty":"0%","ov":"W","tr":"geothermische warmtepomp"},{"kw":"warmtepomp berekening","vol":50,"comp":"Hoog","bl":"1.00","bh":"3.15","t3":"-43%","ty":"-20%","ov":"G","tr":""},{"kw":"warmtepomp installatie kosten","vol":50,"comp":"Hoog","bl":"0.89","bh":"3.17","t3":"-40%","ty":"-73%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"warmtepomp vermogen berekenen","vol":50,"comp":"Normaal","bl":"0.60","bh":"1.47","t3":"-43%","ty":"0%","ov":"G","tr":""},{"kw":"typen warmtepompen","vol":50,"comp":"Hoog","bl":"0.26","bh":"1.18","t3":"-29%","ty":"0%","ov":"G","tr":""},{"kw":"hybride ketel","vol":50,"comp":"Hoog","bl":"0.59","bh":"2.69","t3":"-57%","ty":"-40%","ov":"G","tr":""},{"kw":"installatie warmtepomp kosten","vol":50,"comp":"Hoog","bl":"0.89","bh":"3.17","t3":"-40%","ty":"-73%","ov":"W","tr":"installatie warmtepomp"},{"kw":"vermogen warmtepomp berekenen","vol":50,"comp":"Normaal","bl":"0.60","bh":"1.47","t3":"-43%","ty":"0%","ov":"G","tr":""},{"kw":"berekening warmtepomp","vol":50,"comp":"Hoog","bl":"1.00","bh":"3.15","t3":"-43%","ty":"-20%","ov":"G","tr":""},{"kw":"kosten warmtepomp installeren","vol":50,"comp":"Hoog","bl":"0.89","bh":"3.17","t3":"-40%","ty":"-73%","ov":"G","tr":""},{"kw":"kosten installatie warmtepomp","vol":50,"comp":"Hoog","bl":"0.89","bh":"3.17","t3":"-40%","ty":"-73%","ov":"W","tr":"installatie warmtepomp"},{"kw":"warmtepomp bij renovatie","vol":50,"comp":"Hoog","bl":"0.91","bh":"3.15","t3":"-55%","ty":"-44%","ov":"Bv","tr":"warmtepomp renovatie"},{"kw":"warmwater boiler warmtepomp","vol":50,"comp":"Hoog","bl":"0.65","bh":"1.83","t3":"-44%","ty":"0%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"warmwaterboiler warmtepomp","vol":50,"comp":"Hoog","bl":"0.65","bh":"1.83","t3":"-44%","ty":"0%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp airco","vol":50,"comp":"Hoog","bl":"0.70","bh":"1.92","t3":"0%","ty":"-43%","ov":"Bv","tr":"airco warmtepomp"},{"kw":"warm water boiler met warmtepomp","vol":50,"comp":"Hoog","bl":"0.65","bh":"1.83","t3":"-44%","ty":"0%","ov":"Bv","tr":"warmtepomp en boiler"},{"kw":"warmtepomp aansluiten op bestaande radiatoren","vol":50,"comp":"Hoog","bl":"0.64","bh":"2.46","t3":"-56%","ty":"0%","ov":"G","tr":""},{"kw":"lucht water warmtepomp radiatoren","vol":50,"comp":"Hoog","bl":"0.50","bh":"2.22","t3":"-71%","ty":"-60%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"warmwaterboiler met warmtepomp","vol":50,"comp":"Hoog","bl":"0.65","bh":"1.83","t3":"-44%","ty":"0%","ov":"G","tr":""},{"kw":"warmte boiler","vol":50,"comp":"Hoog","bl":"0.61","bh":"2.11","t3":"0%","ty":"75%","ov":"G","tr":""},{"kw":"warmtepomp voor bestaande woning","vol":50,"comp":"Hoog","bl":"0.61","bh":"3.71","t3":"-67%","ty":"-40%","ov":"Bv","tr":"warmtepomp woning"},{"kw":"koeling via vloerverwarming","vol":50,"comp":"Normaal","bl":"0.08","bh":"0.70","t3":"250%","ty":"40%","ov":"G","tr":""},{"kw":"installeren warmtepomp kosten","vol":50,"comp":"Hoog","bl":"0.89","bh":"3.17","t3":"-40%","ty":"-73%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp werking","vol":50,"comp":"Normaal","bl":"0.13","bh":"0.85","t3":"-40%","ty":"-40%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"warmtepomp kosten installatie","vol":50,"comp":"Hoog","bl":"0.89","bh":"3.17","t3":"-40%","ty":"-73%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"warmtepomp installatie prijzen","vol":40,"comp":"Hoog","bl":"1.13","bh":"2.20","t3":"-67%","ty":"0%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"prijs installatie warmtepomp","vol":40,"comp":"Hoog","bl":"1.13","bh":"2.20","t3":"-67%","ty":"0%","ov":"W","tr":"installatie warmtepomp"},{"kw":"prijzen warmtepomp installatie","vol":40,"comp":"Hoog","bl":"1.13","bh":"2.20","t3":"-67%","ty":"0%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"actieve koeling warmtepomp","vol":40,"comp":"Normaal","bl":"0.43","bh":"2.74","t3":"150%","ty":"25%","ov":"G","tr":""},{"kw":"verwarming lucht lucht","vol":40,"comp":"Hoog","bl":"1.09","bh":"2.48","t3":"-40%","ty":"0%","ov":"G","tr":""},{"kw":"warmtepomp premie vlaanderen","vol":40,"comp":"Normaal","bl":"0.36","bh":"2.36","t3":"-20%","ty":"100%","ov":"G","tr":""},{"kw":"lucht water warmtepomp koeling","vol":40,"comp":"Hoog","bl":"0.40","bh":"1.59","t3":"75%","ty":"75%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"lucht lucht verwarming","vol":40,"comp":"Hoog","bl":"1.09","bh":"2.48","t3":"-40%","ty":"0%","ov":"G","tr":""},{"kw":"vlaanderen premie warmtepomp","vol":40,"comp":"Laag","bl":"0.27","bh":"2.39","t3":"-50%","ty":"-50%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp binnenunit","vol":40,"comp":"Hoog","bl":"0.57","bh":"2.31","t3":"-20%","ty":"0%","ov":"G","tr":""},{"kw":"lucht warmtepomp prijs","vol":40,"comp":"Hoog","bl":"0.94","bh":"2.27","t3":"-25%","ty":"0%","ov":"Bv","tr":"lucht lucht warmtepomp prijs"},{"kw":"ketel warmtepomp","vol":40,"comp":"Hoog","bl":"0.90","bh":"3.06","t3":"-40%","ty":"-25%","ov":"G","tr":""},{"kw":"lucht water warmtepomp installatie","vol":40,"comp":"Hoog","bl":"2.25","bh":"13.73","t3":"-33%","ty":"-60%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"warmtepomp radiatoren prijs","vol":40,"comp":"Hoog","bl":"0.64","bh":"1.84","t3":"-40%","ty":"50%","ov":"G","tr":""},{"kw":"ketel met warmtepomp","vol":40,"comp":"Hoog","bl":"0.90","bh":"3.06","t3":"-40%","ty":"-25%","ov":"G","tr":""},{"kw":"lage temperatuur radiatoren prijs","vol":40,"comp":"Hoog","bl":"0.14","bh":"1.00","t3":"-80%","ty":"-67%","ov":"G","tr":""},{"kw":"warmtepomp ketel","vol":40,"comp":"Hoog","bl":"0.90","bh":"3.06","t3":"-40%","ty":"-25%","ov":"G","tr":""},{"kw":"lage temperatuur radiator prijs","vol":40,"comp":"Hoog","bl":"0.14","bh":"1.00","t3":"-80%","ty":"-67%","ov":"G","tr":""},{"kw":"warmtepomp vs gasketel","vol":40,"comp":"Normaal","bl":"0.50","bh":"2.10","t3":"-57%","ty":"-57%","ov":"G","tr":""},{"kw":"warmtepompboiler installateur","vol":40,"comp":"Hoog","bl":"1.90","bh":"8.24","t3":"-20%","ty":"100%","ov":"G","tr":""},{"kw":"warmtepomp installatie kostprijs","vol":40,"comp":"Hoog","bl":"1.21","bh":"3.21","t3":"-78%","ty":"0%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"installateur warmtepomp lucht lucht","vol":40,"comp":"Laag","bl":"","bh":"","t3":"0%","ty":"-50%","ov":"G","tr":""},{"kw":"kostprijs warmtepomp installatie","vol":40,"comp":"Hoog","bl":"1.21","bh":"3.21","t3":"-78%","ty":"0%","ov":"W","tr":"prijs warmtepomp"},{"kw":"warmtepomp prijs installatie","vol":40,"comp":"Hoog","bl":"1.13","bh":"2.20","t3":"-67%","ty":"0%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"prijzen grondboringen warmtepomp","vol":40,"comp":"Hoog","bl":"0.96","bh":"2.44","t3":"-29%","ty":"25%","ov":"G","tr":""},{"kw":"geothermische warmtepomp vaillant","vol":30,"comp":"Hoog","bl":"0.81","bh":"2.88","t3":"-33%","ty":"0%","ov":"W","tr":"geothermische warmtepomp"},{"kw":"grondwaterwarmtepomp","vol":30,"comp":"Hoog","bl":"0.77","bh":"1.83","t3":"-60%","ty":"-33%","ov":"G","tr":""},{"kw":"beste geothermische warmtepomp","vol":30,"comp":"Hoog","bl":"0.83","bh":"2.11","t3":"0%","ty":"150%","ov":"W","tr":"geothermische warmtepomp"},{"kw":"rendement lucht lucht warmtepomp","vol":30,"comp":"Normaal","bl":"0.37","bh":"1.33","t3":"-50%","ty":"-60%","ov":"G","tr":""},{"kw":"water water warmtepomp werking","vol":30,"comp":"Laag","bl":"","bh":"","t3":"-50%","ty":"-75%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"prijs warmtepomp installatie","vol":30,"comp":"Hoog","bl":"0.76","bh":"2.30","t3":"-40%","ty":"-25%","ov":"W","tr":"prijs warmtepomp"},{"kw":"grondwater warmtepomp","vol":30,"comp":"Hoog","bl":"0.77","bh":"1.83","t3":"-60%","ty":"-33%","ov":"G","tr":""},{"kw":"warmtepomp laten installeren","vol":30,"comp":"Hoog","bl":"5.04","bh":"11.44","t3":"-75%","ty":"-75%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp kopen","vol":30,"comp":"Hoog","bl":"1.29","bh":"4.11","t3":"-43%","ty":"-20%","ov":"Bv","tr":"warmtepomp kopen"},{"kw":"warmtepompboiler installeren","vol":30,"comp":"Hoog","bl":"1.46","bh":"4.26","t3":"0%","ty":"100%","ov":"G","tr":""},{"kw":"hybride warmtepomp kosten","vol":30,"comp":"Hoog","bl":"0.84","bh":"4.31","t3":"-40%","ty":"50%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp rendement","vol":30,"comp":"Normaal","bl":"0.37","bh":"1.33","t3":"-50%","ty":"-60%","ov":"G","tr":""},{"kw":"lucht water warmtepomp cop","vol":30,"comp":"Laag","bl":"0.35","bh":"0.99","t3":"-60%","ty":"-50%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"warmtepomp lucht lucht rendement","vol":30,"comp":"Normaal","bl":"0.37","bh":"1.33","t3":"-50%","ty":"-60%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp installateur","vol":30,"comp":"Hoog","bl":"2.05","bh":"8.17","t3":"-40%","ty":"0%","ov":"G","tr":""},{"kw":"warmtepomp lucht lucht kopen","vol":30,"comp":"Hoog","bl":"1.29","bh":"4.11","t3":"-43%","ty":"-20%","ov":"Bv","tr":"warmtepomp kopen"},{"kw":"rendement warmtepomp lucht lucht","vol":30,"comp":"Normaal","bl":"0.37","bh":"1.33","t3":"-50%","ty":"-60%","ov":"G","tr":""},{"kw":"warmtepomp water water werking","vol":30,"comp":"Laag","bl":"","bh":"","t3":"-50%","ty":"-75%","ov":"Bv","tr":"werking warmtepomp"},{"kw":"cop waarde warmtepomp","vol":30,"comp":"Normaal","bl":"0.03","bh":"1.01","t3":"0%","ty":"-40%","ov":"G","tr":""},{"kw":"warmtepomp verwarming radiatoren","vol":30,"comp":"Hoog","bl":"0.68","bh":"2.74","t3":"-33%","ty":"-33%","ov":"Bv","tr":"warmtepomp voor verwarming"},{"kw":"lage temperatuur radiatoren warmtepomp","vol":30,"comp":"Hoog","bl":"0.53","bh":"2.23","t3":"-60%","ty":"-33%","ov":"G","tr":""},{"kw":"hybride warmtepomp met radiatoren","vol":30,"comp":"Hoog","bl":"0.61","bh":"3.22","t3":"-60%","ty":"0%","ov":"G","tr":""},{"kw":"lucht water warmtepomp met radiatoren","vol":30,"comp":"Hoog","bl":"0.87","bh":"1.94","t3":"-60%","ty":"0%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"hybride lucht water warmtepomp","vol":30,"comp":"Hoog","bl":"1.02","bh":"4.62","t3":"33%","ty":"100%","ov":"W","tr":"lucht water warmtepomp"},{"kw":"gas of warmtepomp","vol":30,"comp":"Hoog","bl":"0.93","bh":"3.97","t3":"-75%","ty":"-75%","ov":"G","tr":""},{"kw":"warmtepomp cv ketel prijs","vol":30,"comp":"Hoog","bl":"0.76","bh":"3.41","t3":"-67%","ty":"-50%","ov":"G","tr":""},{"kw":"warmtepomp bedrijven","vol":30,"comp":"Hoog","bl":"3.60","bh":"17.02","t3":"-67%","ty":"-75%","ov":"G","tr":""},{"kw":"lucht lucht airco","vol":30,"comp":"Hoog","bl":"0.99","bh":"2.72","t3":"0%","ty":"0%","ov":"G","tr":""},{"kw":"hybride warmtepomp wat is dat","vol":30,"comp":"Normaal","bl":"0.19","bh":"1.02","t3":"-25%","ty":"50%","ov":"Bv","tr":"wat is een warmtepomp"},{"kw":"geothermische warmtepomp vs lucht water","vol":30,"comp":"Normaal","bl":"0.36","bh":"1.89","t3":"0%","ty":"-25%","ov":"W","tr":"geothermische warmtepomp"},{"kw":"warmtepomp vloerverwarming en warm water","vol":30,"comp":"Hoog","bl":"0.79","bh":"2.59","t3":"-50%","ty":"0%","ov":"Bv","tr":"vloerverwarming met warmtepomp"},{"kw":"warmtepomp op gas","vol":30,"comp":"Hoog","bl":"0.64","bh":"1.97","t3":"-60%","ty":"-50%","ov":"G","tr":""},{"kw":"lucht lucht warmtepomp installatie","vol":30,"comp":"Hoog","bl":"2.05","bh":"8.17","t3":"-40%","ty":"0%","ov":"Bv","tr":"installatie warmtepomp"},{"kw":"warmtepomp elektriciteit","vol":30,"comp":"Hoog","bl":"0.46","bh":"1.26","t3":"-33%","ty":"-33%","ov":"G","tr":""},{"kw":"premie geothermische warmtepomp","vol":30,"comp":"Laag","bl":"0.26","bh":"1.24","t3":"-50%","ty":"-33%","ov":"W","tr":"geothermische warmtepomp"},{"kw":"vlaamse premie warmtepomp","vol":30,"comp":"Laag","bl":"0.28","bh":"1.59","t3":"0%","ty":"33%","ov":"G","tr":""},{"kw":"warmtepomp premie 2025","vol":30,"comp":"Laag","bl":"","bh":"","t3":"0%","ty":"-50%","ov":"G","tr":""},{"kw":"premie vlaanderen warmtepomp","vol":30,"comp":"Laag","bl":"0.31","bh":"1.52","t3":"-50%","ty":"0%","ov":"G","tr":""},{"kw":"aanvraag premie warmtepompboiler","vol":30,"comp":"Laag","bl":"","bh":"","t3":"0%","ty":"-50%","ov":"G","tr":""},{"kw":"mijn verbouwpremie warmtepompboiler","vol":30,"comp":"Laag","bl":"","bh":"","t3":"-50%","ty":"-67%","ov":"G","tr":""},{"kw":"premie warmtepompboiler vlaanderen","vol":30,"comp":"Laag","bl":"0.15","bh":"0.93","t3":"0%","ty":"0%","ov":"G","tr":""},{"kw":"passieve koeling warmtepomp","vol":30,"comp":"Normaal","bl":"0.24","bh":"1.18","t3":"400%","ty":"150%","ov":"G","tr":""}];
+
+const KW_OV={G:{c:'kw-oG',l:'Geen dekking'},Bd:{c:'kw-oBd',l:'Breed (deels)'},Bv:{c:'kw-oBv',l:'Breed (volledig)'},W:{c:'kw-oW',l:'Woordgroep'}};
+const KW_PAGE=60, KW_MV=4400;
+let kwST={}, kwSC='vol', kwSD=-1, kwVIS=KW_PAGE, kwFR=[];
+
+function kwLoad(){
+  try{const r=localStorage.getItem('gt-kw-hub');if(r)kwST=JSON.parse(r);}catch(e){}
+  kwUpd();
+}
+
+function kwSyncScroll(){
+  const wrap=document.getElementById('kw-table-wrap');
+  const mirror=document.getElementById('kw-scroll-mirror');
+  const inner=document.getElementById('kw-scroll-inner');
+  const table=wrap?wrap.querySelector('.kw-table'):null;
+  if(!wrap||!mirror||!inner||!table)return;
+  inner.style.width=table.scrollWidth+'px';
+  let syncing=false;
+  wrap.onscroll=function(){if(syncing)return;syncing=true;mirror.scrollLeft=wrap.scrollLeft;syncing=false;};
+  mirror.onscroll=function(){if(syncing)return;syncing=true;wrap.scrollLeft=mirror.scrollLeft;syncing=false;};
+}
+
+function kwOpen(){
+  const svEl=document.getElementById('kw-sv');
+  if(svEl)svEl.textContent='↓';
+  kwRender();
+  setTimeout(kwSyncScroll,100);
+}
+
+function kwSave(){
+  try{localStorage.setItem('gt-kw-hub',JSON.stringify(kwST));}catch(e){}
+  const t=document.getElementById('kw-toast');
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',2500);
+}
+
+function kwSort(col){
+  if(kwSC===col)kwSD*=-1;else{kwSC=col;kwSD=col==='vol'?-1:1;}
+  ['kw-sk','kw-sv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='↕';});
+  const el=document.getElementById('kw-s'+col[0]);if(el)el.textContent=kwSD===1?'↑':'↓';
+  kwVIS=KW_PAGE;kwRender();
+}
+
+function kwReset(){kwVIS=KW_PAGE;kwRender();}
+
+function kwMore(){
+  kwVIS+=KW_PAGE;
+  kwDrawRows();
+  kwMoreBar();
+}
+
+function kwTc(t){
+  if(!t||t==='0%'||t==='--')return'kw-tf';
+  const n=parseFloat(t);
+  return isNaN(n)?'kw-tf':n>0?'kw-tu':'kw-td';
+}
+
+function kwUpd(){
+  let ja=0,mis=0,nee=0;
+  KW_DATA.forEach(k=>{const d=kwST[k.kw]||{};if(d.i==='ja')ja++;else if(d.i==='misschien')mis++;else if(d.i==='nee')nee++;});
+  ['kw-s-ja','kw-s-mis','kw-s-nee'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[ja,mis,nee][i];});
+}
+
+function kwFilt(){
+  const q=(document.getElementById('kw-q')||{}).value?.toLowerCase()||'';
+  const fi=(document.getElementById('kw-fi')||{}).value||'';
+  const fo=(document.getElementById('kw-fo')||{}).value||'';
+  const fc=(document.getElementById('kw-fc')||{}).value||'';
+  let rows=KW_DATA.filter(k=>{
+    if(q&&!k.kw.toLowerCase().includes(q))return false;
+    if(fc&&k.comp!==fc)return false;
+    if(fo&&k.ov!==fo)return false;
+    const d=kwST[k.kw]||{};
+    if(fi==='open')return!d.i;
+    if(fi&&d.i!==fi)return false;
+    return true;
+  });
+  rows.sort((a,b)=>kwSC==='vol'?kwSD*(b.vol-a.vol):kwSD*a.kw.localeCompare(b.kw,'nl'));
+  return rows;
+}
+
+function kwRowH(k){
+  const d=kwST[k.kw]||{};
+  const iv=d.i||'';
+  const lp=d.lp||'';
+  const bw=Math.max(Math.round((k.vol/KW_MV)*60),3);
+  const cm={Hoog:'H',Normaal:'N',Laag:'L'}[k.comp]||'O';
+  const ov=KW_OV[k.ov]||{c:'kw-oG',l:k.ov};
+  const kws=k.kw.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  const bid=k.bl&&k.bh?`${k.bl}–${k.bh}`:(k.bl||'—');
+  const trg=k.tr?`<div class="kw-trg">via: ${k.tr}</div>`:'';
+  return`<tr>
+<td class="kw-kw">${k.kw}</td>
+<td><div class="kw-vb"><div class="kw-bar" style="width:${bw}px"></div><span class="kw-vnum">${k.vol.toLocaleString('nl-BE')}</span></div></td>
+<td><span class="kw-comp-${cm}">${k.comp}</span></td>
+<td class="kw-bid">€${bid}</td>
+<td class="${kwTc(k.t3)}">${k.t3}</td>
+<td class="${kwTc(k.ty)}">${k.ty}</td>
+<td><span class="${ov.c}">${ov.l}</span>${trg}</td>
+<td><select class="kw-isel ${iv}" onchange="kwSetI('${kws}',this.value,this)">
+<option value="">—</option>
+<option value="ja" ${iv==='ja'?'selected':''}>✓ Ja</option>
+<option value="misschien" ${iv==='misschien'?'selected':''}>~ Misschien</option>
+<option value="nee" ${iv==='nee'?'selected':''}>✗ Nee</option>
+</select></td>
+<td><input class="kw-lp" type="text" placeholder="/bv. warmtepomp-met-boiler" value="${lp}" onchange="kwSetLP('${kws}',this.value)" oninput="kwSetLP('${kws}',this.value)"></td>
+</tr>`;
+}
+
+function kwDrawRows(){
+  const tb=document.getElementById('kw-tb');
+  if(tb)tb.innerHTML=kwFR.slice(0,kwVIS).map(kwRowH).join('');
+  setTimeout(kwSyncScroll,0);
+}
+
+function kwMoreBar(){
+  const bar=document.getElementById('kw-more-bar');
+  const info=document.getElementById('kw-more-info');
+  if(!bar||!info)return;
+  const shown=Math.min(kwVIS,kwFR.length);
+  if(shown<kwFR.length){
+    info.textContent=`${shown} van ${kwFR.length} zoekwoorden zichtbaar`;
+    bar.style.display='flex';
+  } else {
+    bar.style.display='none';
+  }
+}
+
+function kwRender(){
+  kwFR=kwFilt();
+  const tot=kwFR.length;
+  const vis=document.getElementById('kw-s-vis');
+  const lbl=document.getElementById('kw-lbl');
+  if(vis)vis.textContent=tot;
+  if(lbl)lbl.textContent=tot+' van '+KW_DATA.length+' zoekwoorden';
+  const emp=document.getElementById('kw-emp');
+  const tb=document.getElementById('kw-tb');
+  if(!tot){if(tb)tb.innerHTML='';if(emp)emp.style.display='block';const bar=document.getElementById('kw-more-bar');if(bar)bar.style.display='none';return;}
+  if(emp)emp.style.display='none';
+  kwDrawRows();
+  kwMoreBar();
+}
+
+function kwSetI(kw,val,el){
+  if(!kwST[kw])kwST[kw]={};
+  kwST[kw].i=val;
+  el.className='kw-isel '+val;
+  kwUpd();
+}
+function kwSetLP(kw,val){
+  if(!kwST[kw])kwST[kw]={};
+  kwST[kw].lp=val;
+}
+
+kwLoad();
+
 </script>
+
+<!-- PAGE 4: ZOEKWOORDEN GAPS -->
+<div id="page-keywords" class="page">
+
+  <div class="kw-hero">
+    <div class="hero-eyebrow" style="color:var(--purple)">Zoekwoorden Gaps — Geo-Thermics × Shorrt Video Marketing</div>
+    <h1 class="hero-title">Nieuwe zoekwoorden — beslissingstool</h1>
+    <p class="hero-desc">Zoekwoorden die nog niet actief zijn in het Geo-Thermics account, op basis van de Keyword Planner export (juni 2026) en de actieve zoekwoordenlijst. Gesorteerd op maandelijks zoekvolume in België. Geef per zoekwoord aan of Geo-Thermics hierop wil inzetten.</p>
+  </div>
+
+  <div class="kw-section">
+
+    <div class="kw-legend">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#E8F5F3;border:1px solid #2A9D8F"></span> Geen dekking — thema ontbreekt volledig</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#FDF3E0;border:1px solid #D4860A"></span> Breed (deels) — gedeeltelijke overlap</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#FDEEE9;border:1px solid #C0442A"></span> Breed (volledig) — alle tokens gedekt</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#F0EBFA;border:1px solid #6B4FA0"></span> Woordgroep — phrase match overlap</span>
+    </div>
+
+    <div class="kw-stats">
+      <div class="kw-stat"><div class="kw-stat-num" id="kw-s-tot">221</div><div class="kw-stat-lbl">Totaal zoekwoorden</div></div>
+      <div class="kw-stat"><div class="kw-stat-num" id="kw-s-vis">—</div><div class="kw-stat-lbl">Zichtbaar</div></div>
+      <div class="kw-stat"><div class="kw-stat-num ja" id="kw-s-ja">0</div><div class="kw-stat-lbl">Interessant (ja)</div></div>
+      <div class="kw-stat"><div class="kw-stat-num mis" id="kw-s-mis">0</div><div class="kw-stat-lbl">Misschien</div></div>
+      <div class="kw-stat"><div class="kw-stat-num nee" id="kw-s-nee">0</div><div class="kw-stat-lbl">Niet interessant</div></div>
+    </div>
+
+    <div class="kw-filters">
+      <input type="text" id="kw-q" placeholder="Zoek op zoekwoord…" oninput="kwReset()">
+      <select id="kw-fi" onchange="kwReset()">
+        <option value="">Alle keuzes</option>
+        <option value="ja">Ja</option>
+        <option value="misschien">Misschien</option>
+        <option value="nee">Nee</option>
+        <option value="open">Nog geen keuze</option>
+      </select>
+      <select id="kw-fo" onchange="kwReset()">
+        <option value="">Alle dekking</option>
+        <option value="G">Geen dekking</option>
+        <option value="Bd">Breed (deels)</option>
+        <option value="Bv">Breed (volledig)</option>
+        <option value="W">Woordgroep</option>
+      </select>
+      <select id="kw-fc" onchange="kwReset()">
+        <option value="">Alle concurrentie</option>
+        <option value="Hoog">Hoog</option>
+        <option value="Normaal">Normaal</option>
+        <option value="Laag">Laag</option>
+      </select>
+      <span class="kw-count" id="kw-lbl"></span>
+      <button class="kw-save-btn" onclick="kwSave()">💾 Opslaan</button>
+    </div>
+
+    <div class="kw-scroll-mirror" id="kw-scroll-mirror">
+      <div class="kw-scroll-inner" id="kw-scroll-inner"></div>
+    </div>
+    <div class="kw-table-wrap" id="kw-table-wrap">
+      <table class="kw-table">
+        <thead><tr>
+          <th onclick="kwSort('kw')" style="min-width:220px">Zoekwoord <span id="kw-sk">↕</span></th>
+          <th onclick="kwSort('vol')" style="min-width:130px">Vol/mnd <span id="kw-sv">↓</span></th>
+          <th style="min-width:90px">Concurrentie</th>
+          <th style="min-width:110px">Bod (€)</th>
+          <th style="min-width:70px">3 mnd</th>
+          <th style="min-width:65px">JoJ</th>
+          <th style="min-width:160px">Dekking via account</th>
+          <th style="min-width:120px">Interessant?</th>
+          <th style="min-width:200px">Landingspagina</th>
+        </tr></thead>
+        <tbody id="kw-tb"></tbody>
+      </table>
+      <div class="kw-empty" id="kw-emp" style="display:none">Geen resultaten voor deze filters.</div>
+    </div>
+
+    <div class="kw-more-bar" id="kw-more-bar">
+      <span class="kw-more-info" id="kw-more-info"></span>
+      <button class="kw-more-btn" onclick="kwMore()">↓ Toon volgende 100</button>
+    </div>
+
+  </div>
+</div>
+<div class="kw-toast" id="kw-toast">Keuzes opgeslagen ✓</div>
+
 </body>
 </html>
