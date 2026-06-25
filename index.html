@@ -1200,8 +1200,28 @@ const KW_PAGE=60, KW_MV=4400;
 let kwST={}, kwSC='vol', kwSD=-1, kwVIS=KW_PAGE, kwFR=[];
 
 function kwLoad(){
+  // Laad eerst lokale backup
   try{const r=localStorage.getItem('gt-kw-hub');if(r)kwST=JSON.parse(r);}catch(e){}
   kwUpd();
+  // Haal meest recente keuzes op uit Google Sheets
+  fetch('https://script.google.com/macros/s/AKfycbz8XPhfv71xMFy43kcfU1c57dTO6BNDbzTnbRIraTdLXQ42I82m52eKStxU1qEcFmJX/exec')
+  .then(r => r.json())
+  .then(rows => {
+    if(!Array.isArray(rows)||rows.length===0) return;
+    rows.forEach(row => {
+      if(!row.kw) return;
+      if(!kwST[row.kw]) kwST[row.kw]={};
+      if(row.interest) kwST[row.kw].i = row.interest;
+      if(row.lp) kwST[row.kw].lp = row.lp;
+    });
+    // Lokale backup bijwerken
+    try{localStorage.setItem('gt-kw-hub',JSON.stringify(kwST));}catch(e){}
+    kwUpd();
+    // Herrender als tabblad al open is
+    const kwPage = document.getElementById('page-keywords');
+    if(kwPage && kwPage.classList.contains('active')) kwRender();
+  })
+  .catch(()=>{}); // Stille fout: lokale data blijft geldig
 }
 
 function kwSyncScroll(){
@@ -1224,10 +1244,34 @@ function kwOpen(){
 }
 
 function kwSave(){
+  // Ook lokaal opslaan als backup
   try{localStorage.setItem('gt-kw-hub',JSON.stringify(kwST));}catch(e){}
-  const t=document.getElementById('kw-toast');
-  t.style.display='block';
-  setTimeout(()=>t.style.display='none',2500);
+  // Stuur naar Google Sheets
+  const btn = document.querySelector('.kw-save-btn');
+  if(btn){btn.textContent='⏳ Opslaan...';btn.disabled=true;}
+  const rows = KW_DATA.map(k => ({
+    kw: k.kw,
+    interest: (kwST[k.kw]||{}).i||'',
+    lp: (kwST[k.kw]||{}).lp||''
+  })).filter(r => r.interest || r.lp);
+  fetch('https://script.google.com/macros/s/AKfycbz8XPhfv71xMFy43kcfU1c57dTO6BNDbzTnbRIraTdLXQ42I82m52eKStxU1qEcFmJX/exec', {
+    method: 'POST',
+    body: JSON.stringify(rows)
+  })
+  .then(r => r.json())
+  .then(() => {
+    if(btn){btn.textContent='💾 Opslaan';btn.disabled=false;}
+    const t=document.getElementById('kw-toast');
+    t.style.display='block';
+    setTimeout(()=>t.style.display='none',2500);
+  })
+  .catch(() => {
+    if(btn){btn.textContent='💾 Opslaan';btn.disabled=false;}
+    const t=document.getElementById('kw-toast');
+    t.textContent='⚠️ Opslaan mislukt — lokaal bewaard';
+    t.style.display='block';
+    setTimeout(()=>{t.style.display='none';t.textContent='Keuzes opgeslagen ✓';}  ,3000);
+  });
 }
 
 function kwSort(col){
