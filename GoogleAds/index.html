@@ -164,6 +164,15 @@ button:focus-visible,select:focus-visible,label:focus-within{outline:2px solid v
 .kato-t{display:flex;flex-direction:column;gap:2px;min-width:0}
 .kato-by{font-family:var(--f-human);font-style:italic;font-size:1rem;color:var(--human-ink)}
 @media (max-width:480px){.kato-av{width:52px;height:52px}}
+
+.rcol-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.mt-edit{padding:4px 10px;font-size:.78rem;flex:none}
+.mt-tag{display:inline-block;font:500 .7rem var(--f-body);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px;background:var(--surface)}
+.mt-tag.claude{color:var(--human-ink);border-color:var(--human-line);border-style:dashed}
+.mt-tag.kato{color:var(--human-ink);border-color:var(--human-line)}
+.rcol .h-compose textarea{min-height:120px;font-size:.98rem}
+body.loading main.wrap{visibility:hidden}
+body.loading .bar::after{content:"Cijfers laden…";position:fixed;left:50%;top:45vh;transform:translateX(-50%);font:500 .95rem var(--f-body);color:var(--muted)}
 html,body{overflow-x:clip}
 /* afwisselende banden per segment, over de volle breedte */
 main > section{margin-top:0;padding-block:32px;isolation:isolate}
@@ -531,12 +540,12 @@ section{position:relative}
     <div class="grid2">
       <div class="panel">
         <h3 id="pagesTitle">Meest bekeken pagina's</h3>
-        <p class="eyebrow" style="margin:4px 0 14px">weergaven · <span class="chip est">illustratief</span></p>
+        <p class="eyebrow" style="margin:4px 0 14px">weergaven<span id="pagesEst"> · <span class="chip est">illustratief</span></span></p>
         <div class="pages" id="pages"></div>
       </div>
       <div class="panel">
-        <h3>Zoekinteresse "geothermie" + gebeurtenissen</h3>
-        <p class="eyebrow" style="margin:4px 0 10px">Google Trends-index (0–100) · <span class="chip est">illustratief</span></p>
+        <h3 id="tidxTitle">Zoekinteresse "geothermie" + gebeurtenissen</h3>
+        <p class="eyebrow" style="margin:4px 0 10px" id="tidxSub">Google Trends-index (0–100) · <span class="chip est">illustratief</span></p>
         <div class="chart-box sm"><canvas id="cTrendIdx" aria-label="Zoekinteresse per maand"></canvas></div>
         <ul class="events" id="events"></ul>
       </div>
@@ -590,7 +599,12 @@ section{position:relative}
 (function(){
 const MN=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
 const MNL=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-const N=20; // jan 2025 .. aug 2026
+// ==== Koppeling met de spreadsheet ====
+// Plak hier de URL van de web-app (eindigt op /exec). Leeg = voorbeeldcijfers.
+const GT_ENDPOINT='https://script.google.com/macros/s/AKfycbypACyJw0mDaw3U0Xg93_be_mwjLhxGUg_y9NtEvJT8cJvS5zX-U9kDNE4qX9MfFpS-Zw/exec';
+let LIVE=false;           // true zodra de cijfers uit de spreadsheet komen
+const EST=()=>LIVE?'':'est';
+let N=20; // jan 2025 .. aug 2026
 const months=[...Array(N)].map((_,i)=>({y:2025+Math.floor(i/12),m:i%12}));
 const lbl=i=>MN[months[i].m]+" '"+String(months[i].y).slice(2);
 const lblLong=i=>MNL[months[i].m]+' '+months[i].y;
@@ -626,7 +640,8 @@ const campCost=months.map((_,i)=>{const b=45+campConv[i][0]*3;const w=i<7?Math.r
 const trendIdx=[58,74,52,47,45,49,63,50,44,46,51,48,55,71,68,50,47,49,52,46];
 const PAGES=['/','/geothermische-warmtepomp/','/types-warmtepompen/','/waarom-geo-thermics/','/vergelijking-met-lucht-water-warmtepomp/','/premies/','/contact/'];
 const pageW=[[1,.55,.62,.48,.41,.22,.3],[1,.6,.5,.52,.38,.3,.28]];
-function pagesFor(i){const w=pageW[i%2];return PAGES.map((p,k)=>({p,v:Math.round(sess[i]*1.6*w[k]*(0.9+((i*7+k*13)%10)/50))})).sort((a,b)=>b.v-a.v);}
+let SHEET_PAGES=null,SHEET_PROV=null,SHEET_ZV=null,TEXTS={};
+function pagesFor(i){if(LIVE&&SHEET_PAGES)return (SHEET_PAGES[mkey(i)]||[]).slice().sort((a,b)=>b.v-a.v);const w=pageW[i%2];return PAGES.map((p,k)=>({p,v:Math.round(sess[i]*1.6*w[k]*(0.9+((i*7+k*13)%10)/50))})).sort((a,b)=>b.v-a.v);}
 const EVENTS=[[0,'Nieuwe website live (27–28 jan)'],[1,'Batibouw'],[6,'Wijziging Mijn VerbouwPremie · bouwverlof'],[7,'Budget naar €1.250 · warmtepomp gepauzeerd (21 aug)'],[11,'Test brede zoekwoorden gestopt · lookback GA4/Ads gelijkgezet op 30 dagen'],[13,'Budget naar €2.000 · Batibouw'],[14,'Wijziging Mijn VerbouwPremie'],[17,'Alle conversiecijfers voortaan uit GA4'],[18,'Bouwverlof']];
 
 // maandverslag: [resultaat, verklaring, acties]
@@ -655,7 +670,9 @@ const NOTES={
     ["Aandeel mobiel plots <span class='num'>60%</span>, tegenover <span class='num'>37%</span> desktop. Nog te verklaren: welk kanaal zit achter die stijging?"],[]]
 };
 
+const NOTESK={};Object.keys(NOTES).forEach(i=>{i=+i;NOTESK[(2025+Math.floor(i/12))+'-'+String(i%12+1).padStart(2,'0')]=NOTES[i];});
 // ---- helpers --------------------------------------------------------
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const eur=(v,d=0)=>'€'+v.toLocaleString('nl-BE',{minimumFractionDigits:d,maximumFractionDigits:d});
 const int=v=>v==null?'—':Math.round(v).toLocaleString('nl-BE');
@@ -734,12 +751,39 @@ function renderReport(){
       ${row('Conversie',cr,v=>pct(v),crR(i),true)}
       <span class="src">Automatisch berekend uit GA4. Conversie = leads ÷ sessies.${i<12?' Geen vorig jaar beschikbaar (data vanaf januari 2025).':''}</span>
     </div>`;
-  document.getElementById('report').innerHTML=heads.map((h,k)=>`
-    <div class="rcol"><div><span class="eyebrow">${h[0]}</span><h3 style="margin-top:2px">${h[1]}</h3></div>
-    ${k===0?strip:''}
-    ${n[k]&&n[k].length?'<ul>'+n[k].map(t=>'<li>'+t+'</li>').join('')+'</ul>':'<p class="empty">Nog niet ingevuld voor '+lblLong(sel)+'. '+(k===2?'Kato lijst hier de concrete wijzigingen in de account op.':'Kato vult dit aan bij het maandrapport.')+'</p>'}
-    </div>`).join('');
+  const VAK=['resultaat','verklaring','acties'];const key=mkey(i);const def=NOTESK[key]||[[],[],[]];
+  const can=canEditText();
+  document.getElementById('report').innerHTML=heads.map((h,k)=>{
+    const t=TEXTS[key+'|'+VAK[k]];const has=t&&t.tekst&&t.tekst.trim();
+    const lines=has?t.tekst.split('\n').map(x=>x.replace(/^\s*[-•*]\s*/,'').trim()).filter(Boolean):null;
+    const body=editVak===k?`<div class="h-compose"><textarea id="mt-${k}" aria-label="${h[0]} ${lblLong(i)}" placeholder="Eén punt per regel">${esc(mtDraft[key+'|'+k]!=null?mtDraft[key+'|'+k]:(has?t.tekst:(def[k]||[]).map(plain).join('\n')))}</textarea>
+        ${mtErr?`<p class="h-err">${esc(mtErr)}</p>`:''}<div class="row"><span class="hint">Eén punt per regel.</span><button type="button" class="btn-ghost" data-mt="cancel">Annuleer</button><button type="button" class="btn-h" data-mt="save" data-k="${k}" ${mtSaving?'disabled':''}>${mtSaving?'Bewaren…':'Bewaar'}</button></div></div>`
+      :(lines&&lines.length?'<ul>'+lines.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'
+        :(def[k]&&def[k].length?'<ul>'+def[k].map(x=>'<li>'+x+'</li>').join('')+'</ul>':'<p class="empty">Nog niet ingevuld voor '+lblLong(i)+'.</p>'));
+    const tag=has?(t.bron==='claude'?'<span class="mt-tag claude">voorstel van Claude · na te kijken</span>':t.bron==='maandmail'?'<span class="mt-tag">uit de maandmail van Kato'+(t.bijgewerkt?' · '+fmtDate(t.bijgewerkt):'')+'</span>':'<span class="mt-tag kato">nagekeken door Kato'+(t.bijgewerkt?' · '+fmtDate(t.bijgewerkt):'')+'</span>')
+      :(def[k]&&def[k].length?'<span class="mt-tag">uit de maandmail</span>':'');
+    return `<div class="rcol"><div class="rcol-h"><div><span class="eyebrow">${h[0]}</span><h3 style="margin-top:2px">${h[1]}</h3></div>${can&&editVak!==k?`<button type="button" class="btn-ghost mt-edit" data-mt="edit" data-k="${k}">Bewerk</button>`:''}</div>
+    ${k===0?strip:''}${body}${tag&&editVak!==k?`<div>${tag}</div>`:''}</div>`;}).join('');
 }
+let editVak=null,mtSaving=false,mtErr='';const mtDraft={};
+const plain=h=>String(h).replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
+let EDIT=false;try{if(/bewerken/.test(location.hash))localStorage.setItem('gt-edit','1');EDIT=localStorage.getItem('gt-edit')==='1';}catch(e){EDIT=/bewerken/.test(location.hash);}
+function canEditText(){return typeof MODE!=='undefined'&&(MODE==='db'?writable():MODE==='sheet'&&EDIT);}
+document.getElementById('report').addEventListener('input',e=>{const t=e.target;if(t.id&&t.id.startsWith('mt-'))mtDraft[mkey(sel)+'|'+t.id.slice(3)]=t.value;});
+document.getElementById('report').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-mt]');if(!b)return;const a=b.dataset.mt;
+  if(a==='edit'){editVak=+b.dataset.k;mtErr='';renderReport();const t=document.getElementById('mt-'+editVak);if(t){t.focus();t.selectionStart=t.selectionEnd=t.value.length;}return;}
+  if(a==='cancel'){delete mtDraft[mkey(sel)+'|'+editVak];editVak=null;mtErr='';renderReport();return;}
+  if(a==='save'){const k=+b.dataset.k;const VAK=['resultaat','verklaring','acties'];const maand=mkey(sel);
+    const tekst=(document.getElementById('mt-'+k).value||'').trim();const now=new Date().toISOString();
+    mtSaving=true;mtErr='';renderReport();
+    try{
+      if(MODE==='sheet')await postSheet({op:'setText',maand,vak:VAK[k],tekst});
+      else await db.doc('texts/'+maand+'_'+VAK[k]).set({maand,vak:VAK[k],tekst,bron:'kato',bijgewerkt:now});
+      TEXTS[maand+'|'+VAK[k]]={tekst,bron:'kato',bijgewerkt:now};delete mtDraft[maand+'|'+k];editVak=null;
+    }catch(err){mtErr='Bewaren lukte niet. Probeer het opnieuw.';}
+    mtSaving=false;renderReport();}
+});
 
 // ---- chart defaults ---------------------------------------------------
 function base(){
@@ -857,7 +901,7 @@ function renderView(){
 
 // ---- campagnes ------------------------------------------------------
 function renderCamp(){
-  const i=sel;const cols=['--s2','--s1','--s3'].map(css);
+  const i=sel;const cols=['--s2','--s1','--s3','--s4','--s5'].map(css);
   // minis
   const idx=last12();
   document.getElementById('minis').innerHTML=CAMP.map((n,k)=>`<div class="mini"><h3><span class="dot" style="background:${cols[k]}"></span>${n}</h3><p>Leads (GA4), laatste ${idx.length} maanden · totaal ${idx.reduce((a,x)=>a+campConvGA[x][k],0)}</p><div class="chart-box"><canvas id="mini${k}"></canvas></div></div>`).join('');
@@ -907,20 +951,20 @@ function renderAds(){
     {l:'Klikken',g:aT.clicks,good:true,f:int,src:'Google Ads',est:!adsPR.has(i),sub:'Bezoeken via een advertentie'},
     {l:'CTR',g:aT.ctr,good:true,f:v=>pct(v,2),pp:true,src:'Google Ads',est:!adsPR.has(i),sub:'Deel van de vertoningen met een klik'},
     {l:'Gemiddelde CPC',g:aT.cpc,good:false,f:v=>v==null?'—':eur(v,2),src:'Google Ads',est:!cpcR.has(i),sub:'Kost per klik'},
-    {l:'Vertoningsaandeel',g:aT.is,good:true,f:v=>pct(v,0),pp:true,src:'Google Ads',est:true,sub:'Deel van de zoekopdrachten waarop we verschenen'}
+    {l:'Vertoningsaandeel',g:aT.is,good:true,f:v=>pct(v,0),pp:true,src:'Google Ads',est:!LIVE,sub:'Deel van de zoekopdrachten waarop we verschenen'}
   ];
   document.getElementById('adsKpis').innerHTML=T.map(x=>tileHtml(i,x)).join('');
   document.getElementById('adsTitle').textContent='Prestaties van de advertenties · '+lblLong(i);
-  const cols=['--s2','--s1','--s3'].map(css);const a=adsP[i];const est=adsPR.has(i)?'':'est';
+  const cols=['--s2','--s1','--s3','--s4','--s5'].map(css);const a=adsP[i];const est=adsPR.has(i)?'':'est';
   let h=`<thead><tr><th>Campagne</th><th>Vertoningen</th><th>Klikken</th><th>CTR</th><th>CPC</th><th>Kost</th><th>Vertonings&shy;aandeel</th><th>Leads</th><th>Leads ${cmpName(i).toLowerCase()}</th><th>Kost / lead</th><th>Klik → lead</th></tr></thead><tbody>`;
   const j=cmpIdx(i);
   CAMP.forEach((n,k)=>{const c=a.clicks[k],im=a.impr[k],lv=campConvGA[i][k];
     h+=`<tr><td><span class="dot" style="background:${cols[k]};margin-right:8px"></span>${n}${!im?' <span class="chip">gepauzeerd</span>':''}</td>
-      <td class="num est">${im?int(im):'—'}</td><td class="num est">${c?int(c):'—'}</td><td class="num est">${im?pct(c/im*100,1):'—'}</td>
-      <td class="num est">${c?eur(a.cost[k]/c,2):'—'}</td><td class="num est">${eur(a.cost[k])}</td><td class="num est">${a.is[k]!=null?pct(a.is[k]*100,0):'—'}</td>
-      <td class="num">${lv}</td><td class="num">${j!=null?campConvGA[j][k]:'—'}</td><td class="num est">${lv?eur(a.cost[k]/lv,2):'—'}</td><td class="num est">${c?pct(lv/c*100,1):'—'}</td></tr>`;});
+      <td class="num ${EST()}">${im?int(im):'—'}</td><td class="num ${EST()}">${c?int(c):'—'}</td><td class="num ${EST()}">${im?pct(c/im*100,1):'—'}</td>
+      <td class="num ${EST()}">${c?eur(a.cost[k]/c,2):'—'}</td><td class="num ${EST()}">${eur(a.cost[k])}</td><td class="num ${EST()}">${a.is[k]!=null?pct(a.is[k]*100,0):'—'}</td>
+      <td class="num">${lv}</td><td class="num">${j!=null?campConvGA[j][k]:'—'}</td><td class="num ${EST()}">${lv?eur(a.cost[k]/lv,2):'—'}</td><td class="num ${EST()}">${c?pct(lv/c*100,1):'—'}</td></tr>`;});
   const tc=aT.clicks(i),ti=aT.impr(i),tl=sum(campConvGA[i]);
-  h+=`<tr><td><b>Totaal</b></td><td class="num ${est}"><b>${int(ti)}</b></td><td class="num ${est}"><b>${int(tc)}</b></td><td class="num ${est}"><b>${pct(aT.ctr(i),2)}</b></td><td class="num"><b>${eur(aT.cpc(i),2)}</b></td><td class="num ${spendR.has(i)?'':'est'}"><b>${eur(spend[i])}</b></td><td class="num est"><b>${pct(aT.is(i),0)}</b></td><td class="num"><b>${tl}</b></td><td class="num"><b>${j!=null?sum(campConvGA[j]):'—'}</b></td><td class="num"><b>${tl?eur(spend[i]/tl,2):'—'}</b></td><td class="num est"><b>${tc?pct(tl/tc*100,1):'—'}</b></td></tr>`;
+  h+=`<tr><td><b>Totaal</b></td><td class="num ${est}"><b>${int(ti)}</b></td><td class="num ${est}"><b>${int(tc)}</b></td><td class="num ${est}"><b>${pct(aT.ctr(i),2)}</b></td><td class="num"><b>${eur(aT.cpc(i),2)}</b></td><td class="num ${spendR.has(i)?'':'est'}"><b>${eur(spend[i])}</b></td><td class="num ${EST()}"><b>${pct(aT.is(i),0)}</b></td><td class="num"><b>${tl}</b></td><td class="num"><b>${j!=null?sum(campConvGA[j]):'—'}</b></td><td class="num"><b>${tl?eur(spend[i]/tl,2):'—'}</b></td><td class="num ${EST()}"><b>${tc?pct(tl/tc*100,1):'—'}</b></td></tr>`;
   document.getElementById('adsTbl').innerHTML=h+'</tbody>';
   const idx=last12();
   document.getElementById('adsLegend').innerHTML=CAMP.map((c,k)=>`<span><i class="dot" style="background:${cols[k]}"></i> ${c}</span>`).join('')+`<span><i class="dot" style="background:${css('--ink')}"></i> CTR totaal (rechteras)</span>`;
@@ -940,13 +984,33 @@ const PW=[.24,.30,.13,.12,.06,.05,.02,.04,.015,.015,.01];
 const LBL_OFF={VBR:[38,6],BRU:[-2,-2],WBR:[0,4]};
 let mapMetric='clicks';
 function provVals(i,metric){
+  if(LIVE&&SHEET_PROV)return SHEET_PROV[metric][i]||PROV.map(()=>0);
   const w=PW.map((v,k)=>v*nz(i,k,.18));const t=sum(w);const ws=w.map(v=>v/t);
   if(metric==='clicks')return distribute(ws,aT.clicks(i));
   if(metric==='leads')return distribute(ws.map((v,k)=>v*(k<6?1.08:.7)).map((v,_,a)=>v/sum(a)),leads[i]);
   const c=distribute(ws,aT.clicks(i));const tc=sum(c)||1;return c.map(v=>Math.round(spend[i]*v/tc));
 }
 function lum(hex){const m=/^#?([0-9a-f]{6})$/i.exec(String(hex).trim());if(!m)return 1;const n=parseInt(m[1],16);const c=[n>>16,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+
+function renderMapGew(){
+  const i=sel,g=SHEET_GEW[i],keys=['VL','BRU','WAL'],v=keys.map(k=>g[k]),mx=Math.max(...v)||1,tot=(sum(v)+g.unk)||1;
+  const seq=['--seq-0','--seq-1','--seq-2','--seq-3','--seq-4'].map(css);
+  const svg=document.getElementById('beMap');svg.setAttribute('viewBox',`0 0 ${BE.w} ${BE.h}`);
+  const bOf=x=>Math.min(4,Math.floor(x/mx*4.999));let h='';
+  keys.forEach((k,j)=>GEW[k].forEach(p=>{h+=`<path d="${BE.p[p].d}" fill="${seq[bOf(v[j])]}" data-g="${k}" fill-rule="evenodd"><title>${GEWN[k]}: ${v[j]} leads</title></path>`;}));
+  const LP={VL:[BE.p.ANT.c[0]-40,BE.p.ANT.c[1]+40],BRU:BE.p.BRU.c,WAL:BE.p.NAM.c};
+  keys.forEach((k,j)=>{const b=bOf(v[j]);const fg=lum(seq[b])<.45?'#ffffff':'#14201b';h+=`<text x="${LP[k][0]}" y="${LP[k][1]+4}" text-anchor="middle" fill="${fg}" stroke="${seq[b]}" font-size="${k==='BRU'?10:13}">${v[j]}</text>`;});
+  svg.innerHTML=h;
+  let t=`<thead><tr><th>Gewest</th><th>Leads</th><th>Aandeel</th></tr></thead><tbody>`;
+  keys.map((k,j)=>j).sort((a,b)=>v[b]-v[a]).forEach(j=>{t+=`<tr><td>${GEWN[keys[j]]}</td><td class="num">${v[j]}<span class="bar-in-cell" style="width:${Math.round(v[j]/mx*48)}px"></span></td><td class="num">${Math.round(v[j]/tot*100)}%</td></tr>`;});
+  if(g.unk)t+=`<tr><td>Onbekend of buitenland</td><td class="num">${g.unk}</td><td class="num">${Math.round(g.unk/tot*100)}%</td></tr>`;
+  document.getElementById('mapTbl').innerHTML=t+'</tbody>';
+  document.getElementById('mapTitle').textContent='Per gewest · '+lblLong(i);
+  document.getElementById('mapSub').textContent='GA4 · regio van de bezoeker · alle kanalen';
+  document.getElementById('mapNote').innerHTML='GA4 geeft voor België vooral gewesten terug, geen provincies. Daarom tonen we leads per gewest. Klikken en kost komen uit Google Ads en staan wel per provincie.';
+}
 function renderMap(){
+  if(LIVE&&SHEET_GEW&&mapMetric==='leads')return renderMapGew();
   const i=sel,v=provVals(i,mapMetric),mx=Math.max(...v)||1,tot=sum(v)||1;
   const seq=['--seq-0','--seq-1','--seq-2','--seq-3','--seq-4'].map(css);
   const fmt=mapMetric==='cost'?(x=>eur(x)):int;
@@ -960,7 +1024,7 @@ function renderMap(){
   svg.innerHTML=g;
   const order=PROV.map((p,k)=>k).sort((a,b)=>v[b]-v[a]);
   let h=`<thead><tr><th>Provincie</th><th>${mapMetric==='clicks'?'Klikken':mapMetric==='leads'?'Leads':'Kost'}</th><th>Aandeel</th></tr></thead><tbody>`;
-  order.forEach(k=>{h+=`<tr data-k="${k}"><td>${PROV[k][1]}</td><td class="num est">${fmt(v[k])}<span class="bar-in-cell" style="width:${Math.round(v[k]/mx*48)}px"></span></td><td class="num est">${Math.round(v[k]/tot*100)}%</td></tr>`;});
+  order.forEach(k=>{h+=`<tr data-k="${k}"><td>${PROV[k][1]}</td><td class="num ${EST()}">${fmt(v[k])}<span class="bar-in-cell" style="width:${Math.round(v[k]/mx*48)}px"></span></td><td class="num ${EST()}">${Math.round(v[k]/tot*100)}%</td></tr>`;});
   const t=document.getElementById('mapTbl');t.innerHTML=h+'</tbody>';
   const hl=k=>{svg.querySelectorAll('path').forEach(p=>p.classList.toggle('hl',p.dataset.k===String(k)));t.querySelectorAll('tr[data-k]').forEach(r=>r.classList.toggle('hl',r.dataset.k===String(k)));};
   svg.querySelectorAll('path').forEach(p=>{p.onmouseenter=()=>hl(p.dataset.k);p.onmouseleave=()=>hl(-1);});
@@ -968,13 +1032,13 @@ function renderMap(){
   document.getElementById('mapTitle').textContent='Per provincie · '+lblLong(i);
   document.getElementById('mapSub').textContent=mapMetric==='leads'?'GA4 · regio van de bezoeker · alle kanalen':'Google Ads · locatie van de gebruiker';
   const vl=Math.round((v[0]+v[1])/tot*100);
-  document.getElementById('mapNote').innerHTML=`<span class="chip est">illustratief</span> West- en Oost-Vlaanderen samen: <b>${vl}%</b>. Een hoog aandeel buiten het werkgebied wijst op instellingen voor locatietargeting die nagekeken moeten worden.`;
+  document.getElementById('mapNote').innerHTML=(LIVE?'':'<span class="chip est">illustratief</span> ')+(LIVE&&SHEET_PROV&&SHEET_PROV.unk[mapMetric][i]?`<b>${fmt(SHEET_PROV.unk[mapMetric][i])}</b> niet toe te wijzen aan een provincie. `:'')+`West- en Oost-Vlaanderen samen: <b>${vl}%</b>. Een hoog aandeel buiten het werkgebied wijst op instellingen voor locatietargeting die nagekeken moeten worden.`;
 }
 
 // ---- kanalen & apparaten -------------------------------------------
 function last12(){const end=sel>=N-12?N-1:Math.max(sel,11);const from=Math.max(0,end-11);return [...Array(end-from+1)].map((_,k)=>from+k);}
 function renderChannels(){
-  const idx=last12();const cols=['--s1','--s2','--s3','--s4','--s5'].map(css);
+  const idx=last12();const cols=['--s1','--s2','--s3','--s4','--s5','--ink-2'].map(css);
   document.getElementById('chLegend').innerHTML=CH.map((c,k)=>`<span><i class="dot" style="background:${cols[k]}"></i> ${c}</span>`).join('');
   kill('ch');
   charts.ch=new Chart(document.getElementById('cCh'),{type:'bar',
@@ -1005,7 +1069,7 @@ function renderDevices(){
 
 // ---- pagina's & context -----------------------------------------------
 function renderPages(){
-  const p=pagesFor(sel).slice(0,6);const mx=p[0].v;
+  const p=pagesFor(sel).slice(0,6);const mx=(p[0]&&p[0].v)||1;
   document.getElementById('pagesTitle').textContent="Meest bekeken pagina's · "+lblLong(sel);
   document.getElementById('pages').innerHTML=p.map((x,k)=>`<div class="pg"><span class="lbl" title="${x.p}">${k+1}. ${x.p}</span><span class="v num">${int(x.v)}</span><div class="track"><span style="width:${x.v/mx*100}%"></span></div></div>`).join('');
 }
@@ -1013,19 +1077,102 @@ function renderContext(){
   kill('tidx');
   const evIdx=new Set(EVENTS.map(e=>e[0]));
   charts.tidx=new Chart(document.getElementById('cTrendIdx'),{type:'line',
-    data:{labels:months.map((_,i)=>lbl(i)),datasets:[{label:'Zoekinteresse',data:trendIdx,borderColor:css('--s1'),backgroundColor:css('--seq-0'),fill:true,borderWidth:2,tension:.3,
-      pointRadius:ctx=>evIdx.has(ctx.dataIndex)?4:0,pointBackgroundColor:css('--surface'),pointBorderColor:css('--s1'),borderDash:[5,4]}]},
+    data:{labels:months.map((_,i)=>lbl(i)),datasets:[{label:LIVE&&SHEET_ZV?'Zoekopdrachten':'Zoekinteresse',data:LIVE&&SHEET_ZV?SHEET_ZV:trendIdx,borderColor:css('--s1'),backgroundColor:css('--seq-0'),fill:true,borderWidth:2,tension:.3,
+      pointRadius:ctx=>evIdx.has(ctx.dataIndex)?4:0,pointBackgroundColor:css('--surface'),pointBorderColor:css('--s1'),borderDash:LIVE&&SHEET_ZV?undefined:[5,4],spanGaps:false}]},
     plugins:[selLine],
     options:{maintainAspectRatio:false,plugins:{selLine:{idx:sel},legend:{display:false},tooltip:{...tip(),callbacks:{title:it=>lblLong(it[0].dataIndex),afterBody:it=>EVENTS.filter(e=>e[0]===it[0].dataIndex).map(e=>'• '+e[1])}}},
-      scales:{y:{min:0,max:100,grid:{color:css('--line')},ticks:{stepSize:25}},x:{grid:{display:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:7}}},
+      scales:{y:LIVE&&SHEET_ZV?{beginAtZero:true,grid:{color:css('--line')}}:{min:0,max:100,grid:{color:css('--line')},ticks:{stepSize:25}},x:{grid:{display:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:7}}},
       onClick:(e,els)=>{if(els.length)setSel(els[0].index);}}});
-  document.getElementById('events').innerHTML=EVENTS.map(([i,t])=>`<li class="${i===sel?'cur':''}"><b>${lbl(i)}</b><span>${t}</span></li>`).join('');
+  document.getElementById('events').innerHTML=EVENTS.map(([i,t,url])=>`<li class="${i===sel?'cur':''}"><b>${lbl(i)}</b><span>${esc(t)}${url?` <a href="${esc(String(url).split(/[ ,]+/)[0])}" target="_blank" rel="noopener">bron</a>`:''}</span></li>`).join('');
+}
+
+
+// ---- cijfers uit de spreadsheet --------------------------------------
+const PROV_NAMES={ANT:['antwerp','antwerpen','anvers'],OVL:['east flanders','oost-vlaanderen','oost vlaanderen','flandre-orientale','flandre orientale'],
+  WVL:['west flanders','west-vlaanderen','west vlaanderen','flandre-occidentale','flandre occidentale'],VBR:['flemish brabant','vlaams-brabant','vlaams brabant','brabant flamand'],
+  WBR:['walloon brabant','waals-brabant','waals brabant','brabant wallon'],LIM:['limburg','limbourg'],BRU:['brussels','brussel','bruxelles','brussels-capital','brussels capital region','brussels hoofdstedelijk gewest','region de bruxelles-capitale'],
+  HEN:['hainaut','henegouwen'],LUI:['liege','luik','luttich'],LUX:['luxembourg','luxemburg'],NAM:['namur','namen']};
+const GEW={VL:['WVL','OVL','ANT','VBR','LIM'],BRU:['BRU'],WAL:['WBR','HEN','NAM','LUI','LUX']};const GEWN={VL:'Vlaanderen',BRU:'Brussel',WAL:'Wallonië'};
+function gewKey(name){const n=String(name||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');if(/^(flanders|vlaanderen|flemish region|flandre)/.test(n))return 'VL';if(/^(wallonia|wallonie|walloon region)/.test(n))return 'WAL';const p=provKey(name);if(!p)return null;return Object.keys(GEW).find(g=>GEW[g].includes(p));}
+let SHEET_GEW=null;
+function provKey(name){const n=String(name||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/^(province of|provincie|province de|province du|province d'|provinz)\s*/,'').replace(/\s+province$/,'').trim();
+  for(const k in PROV_NAMES)if(PROV_NAMES[k].some(v=>n===v||n.startsWith(v+' ')||n.startsWith(v+',')))return k;return null;}
+function applySheet(d){
+  const gm=(d.ga4Maand||[]).filter(r=>/^\d{4}-\d{2}$/.test(r.maand)).sort((a,b)=>a.maand.localeCompare(b.maand));
+  if(!gm.length)return false;
+  const keys=gm.map(r=>r.maand),ix={};keys.forEach((k,i)=>ix[k]=i);
+  const fill=(arr,vals)=>{arr.length=0;vals.forEach(v=>arr.push(v));};
+  N=keys.length;fill(months,keys.map(k=>({y:+k.slice(0,4),m:+k.slice(5,7)-1})));
+  fill(leads,gm.map(r=>+r.leads||0));fill(sess,gm.map(r=>+r.sessies||0));
+  // kanalen
+  const base5=['Paid Search','Organic Search','Direct','Referral','AI-assistent'];
+  fill(CH,base5);if((d.ga4Kanaal||[]).some(r=>r.kanaal==='Overig'&&+r.leads>0))CH.push('Overig');
+  const ch=keys.map(()=>CH.map(()=>0));
+  (d.ga4Kanaal||[]).forEach(r=>{const i=ix[r.maand],k=CH.indexOf(r.kanaal);if(i!=null&&k>=0)ch[i][k]+=+r.leads||0;});
+  fill(chan,ch);fill(paid,ch.map(c=>c[0]));
+  // apparaten, als aandeel van de sessies
+  const DK={mobile:0,desktop:1,tablet:2};const dv=keys.map(()=>[0,0,0]);
+  (d.ga4Apparaat||[]).forEach(r=>{const i=ix[r.maand],k=DK[String(r.apparaat).toLowerCase()];if(i!=null&&k!=null)dv[i][k]+=+r.sessies||0;});
+  fill(dev,dv.map(a=>{const t=(a[0]+a[1]+a[2])||1;const p=a.map(v=>Math.round(v/t*100));p[1]=100-p[0]-p[2];return p;}));
+  // campagnes (Google Ads), gesorteerd op totale kost
+  const ac=d.adsCampagne||[],tot={};ac.forEach(r=>{tot[r.campagne]=(tot[r.campagne]||0)+(+r.kost||0);});
+  const names=Object.keys(tot).sort((a,b)=>tot[b]-tot[a]);if(names.length)fill(CAMP,names);
+  const z=()=>CAMP.map(()=>0);const cost=keys.map(z),clk=keys.map(z),imp=keys.map(z),isv=keys.map(()=>CAMP.map(()=>null));
+  ac.forEach(r=>{const i=ix[r.maand],k=CAMP.indexOf(r.campagne);if(i==null||k<0)return;cost[i][k]+=+r.kost||0;clk[i][k]+=+r.klikken||0;imp[i][k]+=+r.vertoningen||0;
+    if(r.vertoningsaandeel!==''&&r.vertoningsaandeel!=null)isv[i][k]=(+r.vertoningsaandeel)/100;});
+  fill(campCost,cost.map(a=>a.map(v=>Math.round(v*100)/100)));
+  fill(spend,campCost.map(a=>Math.round(sum(a)*100)/100));
+  fill(cpc,keys.map((_,i)=>{const c=sum(clk[i]);return c?spend[i]/c:0;}));
+  fill(adsP,keys.map((_,i)=>({clicks:clk[i],impr:imp[i],is:isv[i],cost:campCost[i]})));
+  const cl=keys.map(z);(d.ga4Campagne||[]).forEach(r=>{const i=ix[r.maand],k=CAMP.indexOf(r.campagne);if(i!=null&&k>=0)cl[i][k]+=+r.leads||0;});
+  fill(campConvGA,cl);
+  // SQL's en budget
+  const sq={};(d.sql||[]).forEach(r=>{if(r.sqls!==''&&r.sqls!=null)sq[r.maand]=+r.sqls;});fill(sql,keys.map(k=>k in sq?sq[k]:null));
+  const bu={};(d.budget||[]).forEach(r=>{if(r.budget!==''&&r.budget!=null)bu[r.maand]=+r.budget;});let lastB=null;fill(budget,keys.map(k=>{if(k in bu)lastB=bu[k];return lastB;}));
+  // pagina's
+  SHEET_PAGES={};(d.ga4Pagina||[]).forEach(r=>{(SHEET_PAGES[r.maand]=SHEET_PAGES[r.maand]||[]).push({p:r.pagina,v:+r.weergaven||0});});
+  // provincies: klikken en kost uit Google Ads, leads uit GA4
+  const P=()=>keys.map(()=>PROV.map(()=>0)),U=()=>keys.map(()=>0);
+  SHEET_PROV={clicks:P(),cost:P(),leads:P(),unk:{clicks:U(),cost:U(),leads:U()}};
+  const pi=k=>PROV.findIndex(p=>p[0]===k);
+  (d.adsProvincie||[]).forEach(r=>{const i=ix[r.maand];if(i==null)return;const k=pi(provKey(r.provincie));
+    if(k>=0){SHEET_PROV.clicks[i][k]+=+r.klikken||0;SHEET_PROV.cost[i][k]+=Math.round(+r.kost||0);}else{SHEET_PROV.unk.clicks[i]+=+r.klikken||0;SHEET_PROV.unk.cost[i]+=Math.round(+r.kost||0);}});
+  SHEET_GEW=keys.map(()=>({VL:0,BRU:0,WAL:0,unk:0}));
+  (d.ga4Regio||[]).forEach(r=>{const i=ix[r.maand];if(i==null)return;const g=gewKey(r.regio);SHEET_GEW[i][g||'unk']+=+r.leads||0;});
+  // zoekvolume: "geothermie" als het er is, anders alle zoekwoorden samen
+  const zv=d.zoekvolume||[];
+  if(zv.length){const hasGeo=zv.some(r=>String(r.zoekwoord).toLowerCase()==='geothermie');const v=keys.map(()=>null);
+    zv.forEach(r=>{const i=ix[r.maand];if(i==null)return;if(hasGeo&&String(r.zoekwoord).toLowerCase()!=='geothermie')return;v[i]=(v[i]||0)+(+r.volume||0);});
+    SHEET_ZV=v;}
+  // gebeurtenissen
+  fill(EVENTS,(d.gebeurtenissen||[]).filter(r=>ix[r.maand]!=null).map(r=>[ix[r.maand],r.omschrijving,r.bron,r.type]).sort((a,b)=>a[0]-b[0]));
+  // maandtekst
+  TEXTS=textsOf(d);
+  // alles is echt
+  [leadsR,sessR,spendR,cpcR,chanR,devR,paidR,adsPR].forEach(st=>{st.clear();keys.forEach((_,i)=>st.add(i));});
+  LIVE=true;
+  sel=N-1;cmpSel=Math.max(0,N-3);
+  selEl.innerHTML=months.map((_,i)=>`<option value="${i}">${lblLong(i)}</option>`).reverse().join('');
+  cmEl.innerHTML=selEl.innerHTML;
+  const pr=document.querySelector('.proto');if(pr)pr.hidden=true;
+  const pe=document.getElementById('pagesEst');if(pe)pe.hidden=true;
+  if(SHEET_ZV){document.getElementById('tidxTitle').textContent='Zoekvolume "geothermie" + gebeurtenissen';document.getElementById('tidxSub').textContent='Keyword Planner · zoekopdrachten per maand in België';}
+  else{document.getElementById('tidxTitle').textContent='Gebeurtenissen';document.getElementById('tidxSub').textContent='zoekvolume nog niet aangeleverd';}
+  return true;
+}
+function textsOf(d){const t={};(d.maandtekst||[]).forEach(r=>{t[r.maand+'|'+r.vak]={tekst:String(r.tekst||''),bron:r.bron,bijgewerkt:r.bijgewerkt};});return t;}
+function notesOf(d){return (d.notities||[]).map(n=>({id:n.id,month:n.maand,section:n.sectie,who:n.wie,text:String(n.tekst||''),createdAt:n.aangemaakt,updatedAt:n.bewerkt}));}
+async function loadSheet(){
+  const r=await fetch(GT_ENDPOINT+'?action=all',{cache:'no-store'});const j=await r.json();if(!j.ok)throw new Error(j.error||'laden mislukt');return j.data;
+}
+async function postSheet(body){
+  const r=await fetch(GT_ENDPOINT,{method:'POST',body:JSON.stringify(body)});const j=await r.json();if(!j.ok)throw new Error(j.error||'bewaren mislukt');return j;
 }
 
 // ---- wiring ---------------------------------------------------------
 const selEl=document.getElementById('month');
 selEl.innerHTML=months.map((_,i)=>`<option value="${i}">${lblLong(i)}</option>`).reverse().join('');
-function setSel(i){sel=Math.max(0,Math.min(N-1,i));renderAll();}
+function setSel(i){sel=Math.max(0,Math.min(N-1,i));editVak=null;mtErr='';renderAll();}
 function renderAll(){
   selEl.value=sel;document.getElementById('prev').disabled=sel===0;document.getElementById('next').disabled=sel===N-1;
   document.getElementById('footData').textContent=lblLong(N-1);
@@ -1048,7 +1195,6 @@ document.addEventListener('keydown',e=>{if(e.target.closest('select,input,textar
 // ---- menselijke laag: toelichting van Kato ----------------------------
 const SECNAME={kern:'Kerncijfers',verslag:"Kato's analyse",tijd:'Door de maanden heen',campagnes:'Per campagne',ads:'Prestaties van de advertenties',kanalen:'Kanalen en apparaten',context:'Website en context'};
 const mkey=i=>months[i].y+'-'+String(months[i].m+1).padStart(2,'0');
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let hv='bol';
 let notes=[],db=null,U=null,myId=null,canWrite=null,owner=false,hStatus='loading',readOnly=false;
 let openSec=null,composing=null,editing=null,confirmDel=null,saving=false,hErr='';const drafts={};
@@ -1056,16 +1202,33 @@ let who='shorrt';try{who=localStorage.getItem('gt-who')||'shorrt';}catch(e){}
 const WHO={shorrt:'Kato & Ruben · Shorrt',klant:'Geo-Thermics'};
 const whoOf=n=>n.who==='klant'?'klant':'shorrt';
 const FALLBACK_NOTES=[]; // bollen starten leeg; Kato vult ze zelf in
-const writable=()=>!!db&&canWrite!==false&&!readOnly&&!!myId;
+let MODE='off';  // 'sheet', 'db' of 'off'
+const writable=()=>MODE==='sheet'||(MODE==='db'&&!!db&&canWrite!==false&&!readOnly&&!!myId);
 const fmtDate=iso=>{try{return new Date(iso).toLocaleDateString('nl-BE',{day:'numeric',month:'short',year:'numeric'});}catch(e){return '';}};
 const HINT={bol:'Naast elke titel staat een bol. Grijs: nog niets. Oranje: toelichting van Kato of Ruben. Groen: vraag of opmerking van Geo-Thermics. Zijn er beide, dan staat de groene bol half achter de oranje. Klik op een bol om te lezen of iets toe te voegen.',balk:'Direct zichtbaar: de toelichting staat onder de titel, zonder klikken.'};
 
-async function initHuman(){
+
+async function noteAdd(n){
+  if(MODE==='sheet'){const j=await postSheet({op:'addNote',maand:n.month,sectie:n.section,wie:n.who,tekst:n.text});notes.push(Object.assign({id:j.id},n));renderAll();return;}
+  await db.collection('notes').add(n);
+}
+async function noteEdit(id,o){
+  if(MODE==='sheet'){await postSheet({op:'editNote',id,tekst:o.text});const n=notes.find(x=>x.id===id);if(n)Object.assign(n,o);renderAll();return;}
+  await db.doc('notes/'+id).update(o);
+}
+async function noteDel(id){
+  if(MODE==='sheet'){await postSheet({op:'deleteNote',id});notes=notes.filter(x=>x.id!==id);renderAll();return;}
+  await db.doc('notes/'+id).delete();
+}
+async function initHuman(sheetNotes){
+  if(sheetNotes){notes=sheetNotes;MODE='sheet';hStatus='ok';renderReport();renderHuman();refreshOptions();return;}
   renderHuman();
   if(!window.claude||!window.claude.use){notes=FALLBACK_NOTES;hStatus='off';renderHuman();refreshOptions();return;}
   try{db=await claude.use('db');U=await claude.use('user');}catch(e){}
   if(U){try{myId=await U.id();canWrite=await U.can('data.write');owner=await U.isOwner();}catch(e){}}
   if(!db){notes=FALLBACK_NOTES;hStatus='off';renderHuman();refreshOptions();return;}
+  MODE='db';renderReport();
+  db.collection('texts').onSnapshot(s=>{TEXTS={};s.docs.forEach(d=>{const x=d.data();TEXTS[x.maand+'|'+x.vak]=x;});renderReport();},()=>{});
   db.collection('notes').onSnapshot(s=>{notes=s.docs.map(d=>Object.assign({id:d.id},d.data()));hStatus='ok';renderHuman();refreshOptions();},()=>{hStatus='err';renderHuman();});
 }
 function notesFor(sec){return notes.filter(n=>n.month===mkey(sel)&&n.section===sec).sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));}
@@ -1076,7 +1239,7 @@ function noteHtml(n,ps){
   const mail=n.source==='mail';const p=n.author&&ps[n.author];const w=whoOf(n);
   const name=WHO[w];
   const av=`<span class="av">${w==='klant'?'G':'S'}</span>`;
-  const mine=!mail&&writable()&&(n.author===myId||owner);
+  const mine=!mail&&writable()&&(MODE==='sheet'||n.author===myId||owner);
   let tools='';
   if(mine){tools=confirmDel===n.id?`<span class="tools"><button type="button" data-act="del-yes" data-id="${n.id}">Ja, verwijder</button><button type="button" data-act="del-no">Annuleer</button></span>`:`<span class="tools"><button type="button" data-act="edit" data-id="${n.id}">Bewerk</button><button type="button" data-act="del" data-id="${n.id}">Verwijder</button></span>`;}
   if(editing===n.id) return `<div class="h-note ${w}">${av}<div>${composeHtml(n.section,n.text,true)}</div></div>`;
@@ -1142,13 +1305,13 @@ document.addEventListener('click',async e=>{
   else if(a==='edit'){const n=notes.find(x=>x.id===b.dataset.id);editing=b.dataset.id;composing=null;drafts[n.section]=n.text;}
   else if(a==='del'){confirmDel=b.dataset.id;}
   else if(a==='del-no'){confirmDel=null;}
-  else if(a==='del-yes'){try{await db.doc('notes/'+b.dataset.id).delete();}catch(err){hErr='Verwijderen lukte niet. Probeer het opnieuw.';}confirmDel=null;}
+  else if(a==='del-yes'){try{await noteDel(b.dataset.id);}catch(err){hErr='Verwijderen lukte niet. Probeer het opnieuw.';}confirmDel=null;}
   else if(a==='save'||a==='save-edit'){
     const text=(drafts[sec]||'').trim();if(!text){hErr='Schrijf eerst een toelichting.';renderHuman();return;}
     saving=true;hErr='';renderHuman();const now=new Date().toISOString();
     try{
-      if(a==='save')await db.collection('notes').add({month:mkey(sel),section:sec,text,who,author:myId,createdAt:now,updatedAt:now});
-      else await db.doc('notes/'+editing).update({text,updatedAt:now});
+      if(a==='save')await noteAdd({month:mkey(sel),section:sec,text,who,author:myId,createdAt:now,updatedAt:now});
+      else await noteEdit(editing,{text,updatedAt:now});
       delete drafts[sec];composing=null;editing=null;
     }catch(err){
       if(err&&err.code==='invalid_argument'&&canWrite==null){readOnly=true;hErr='';composing=null;editing=null;}
@@ -1162,7 +1325,15 @@ document.addEventListener('click',async e=>{
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&openSec){openSec=null;composing=null;editing=null;renderHuman();}});
 document.querySelectorAll('[data-hv]').forEach(b=>b.onclick=()=>{hv=b.dataset.hv;try{localStorage.setItem('gt-hv',hv);}catch(e){}openSec=null;composing=null;editing=null;renderHuman();});
 
-function start(){base();renderAll();initHuman();}
+async function start(){
+  base();
+  if(GT_ENDPOINT){
+    document.body.classList.add('loading');
+    try{const d=await loadSheet();const r=applySheet(d);if(!r)TEXTS=textsOf(d);document.body.classList.remove('loading');renderAll();initHuman(notesOf(d));return;}
+    catch(e){document.body.classList.remove('loading');const pr=document.querySelector('.proto');if(pr){pr.hidden=false;pr.innerHTML='<span><strong>De cijfers konden niet geladen worden.</strong> Je ziet voorbeeldcijfers. Herlaad de pagina of probeer het later opnieuw.</span>';}}
+  }
+  renderAll();initHuman();
+}
 if(window.Chart){start();}else{window.addEventListener('load',start);}
 const rerender=()=>{base();renderAll();};
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',rerender);}catch(e){}
