@@ -680,7 +680,7 @@ const NOTESK={};Object.keys(NOTES).forEach(i=>{i=+i;NOTESK[(2025+Math.floor(i/12
 // ---- helpers --------------------------------------------------------
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const eur=(v,d=0)=>'€'+v.toLocaleString('nl-BE',{minimumFractionDigits:d,maximumFractionDigits:d});
+const eur=(v,d=0)=>v==null||isNaN(v)?'—':'€'+v.toLocaleString('nl-BE',{minimumFractionDigits:d,maximumFractionDigits:d});
 const int=v=>v==null?'—':Math.round(v).toLocaleString('nl-BE');
 const cpl=i=>chan[i][0]?spend[i]/chan[i][0]:null;
 const cplR=i=>spendR.has(i)&&chanR.has(i);
