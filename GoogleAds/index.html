@@ -1085,11 +1085,11 @@ function renderContext(){
   kill('tidx');
   const evIdx=new Set(EVENTS.map(e=>e[0]));
   charts.tidx=new Chart(document.getElementById('cTrendIdx'),{type:'line',
-    data:{labels:months.map((_,i)=>lbl(i)),datasets:[{label:LIVE&&SHEET_ZV?'Zoekopdrachten':'Zoekinteresse',data:LIVE&&SHEET_ZV?SHEET_ZV:trendIdx,borderColor:css('--s1'),backgroundColor:css('--seq-0'),fill:true,borderWidth:2,tension:.3,
-      pointRadius:ctx=>evIdx.has(ctx.dataIndex)?4:0,pointBackgroundColor:css('--surface'),pointBorderColor:css('--s1'),borderDash:LIVE&&SHEET_ZV?undefined:[5,4],spanGaps:false}]},
+    data:{labels:months.map((_,i)=>lbl(i)),datasets:[{label:LIVE?'Leads':'Zoekinteresse',data:LIVE?leads:trendIdx,borderColor:css('--s1'),backgroundColor:css('--seq-0'),fill:true,borderWidth:2,tension:.3,
+      pointRadius:ctx=>evIdx.has(ctx.dataIndex)?4:0,pointBackgroundColor:css('--surface'),pointBorderColor:css('--s1'),borderDash:LIVE?undefined:[5,4],spanGaps:false}]},
     plugins:[selLine],
     options:{maintainAspectRatio:false,plugins:{selLine:{idx:sel},legend:{display:false},tooltip:{...tip(),callbacks:{title:it=>lblLong(it[0].dataIndex),afterBody:it=>EVENTS.filter(e=>e[0]===it[0].dataIndex).map(e=>'• '+e[1])}}},
-      scales:{y:LIVE&&SHEET_ZV?{beginAtZero:true,grid:{color:css('--line')}}:{min:0,max:100,grid:{color:css('--line')},ticks:{stepSize:25}},x:{grid:{display:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:7}}},
+      scales:{y:LIVE?{beginAtZero:true,grid:{color:css('--line')},ticks:{precision:0}}:{min:0,max:100,grid:{color:css('--line')},ticks:{stepSize:25}},x:{grid:{display:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:7}}},
       onClick:(e,els)=>{if(els.length)setSel(els[0].index);}}});
   document.getElementById('events').innerHTML=EVENTS.map(([i,t,url])=>`<li class="${i===sel?'cur':''}"><b>${lbl(i)}</b><span>${esc(t)}${url?` <a href="${esc(String(url).split(/[ ,]+/)[0])}" target="_blank" rel="noopener">bron</a>`:''}</span></li>`).join('');
 }
@@ -1164,8 +1164,7 @@ function applySheet(d){
   cmEl.innerHTML=selEl.innerHTML;
   const pr=document.querySelector('.proto');if(pr)pr.hidden=true;
   const pe=document.getElementById('pagesEst');if(pe)pe.hidden=true;
-  if(SHEET_ZV){document.getElementById('tidxTitle').textContent='Zoekvolume "geothermie" + gebeurtenissen';document.getElementById('tidxSub').textContent='Keyword Planner · zoekopdrachten per maand in België';}
-  else{document.getElementById('tidxTitle').textContent='Gebeurtenissen';document.getElementById('tidxSub').textContent='zoekvolume nog niet aangeleverd';}
+  document.getElementById('tidxTitle').textContent='Leads en gebeurtenissen';document.getElementById('tidxSub').textContent='leads per maand (GA4) · een punt markeert een gebeurtenis';
   return true;
 }
 function textsOf(d){const t={};(d.maandtekst||[]).forEach(r=>{t[r.maand+'|'+r.vak]={tekst:String(r.tekst||''),bron:r.bron,bijgewerkt:r.bijgewerkt};});return t;}
@@ -1255,7 +1254,7 @@ function renderInc(){const el=document.getElementById('incNote');if(!el)return;c
   if(!isInc(sel)){el.hidden=true;el.innerHTML='';return;}
   el.hidden=false;el.innerHTML='<i class="inc-ic" aria-hidden="true"></i><div><strong>Onvolledige gegevens voor '+lblLong(sel)+'.</strong> '+
     (k==='2023-11'?'Shorrt startte half oktober 2023 met de campagnes; november is de eerste volledige maand. ':'')+
-    'Voor de maanden tot en met december 2024 ontbreken het budget, de SQL\'s en het zoekvolume. De leads werden toen nog gemeten op de vorige website, en die meting liep niet altijd goed. '+
+    'Voor de maanden tot en met december 2024 ontbreken het budget en de SQL\'s. De leads werden toen nog gemeten op de vorige website, en die meting liep niet altijd goed. '+
     (TRACK_ISSUE[k]?TRACK_ISSUE[k]+' ':'')+'Vergelijk deze maand daarom voorzichtig met recentere maanden.</div>';}
 
 function noteHtml(n,ps){
