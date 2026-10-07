@@ -247,13 +247,14 @@ tr.sel td{background:var(--accent-soft)}
 td .bar-in-cell{display:inline-block;height:6px;border-radius:3px;background:var(--s1);vertical-align:middle;margin-left:8px}
 
 /* heatmap */
-.heat{display:grid;gap:3px;font-size:.75rem;min-width:760px}
+.heat{display:grid;gap:3px;font-size:.75rem;min-width:640px}
 .heat .h{color:var(--muted);text-align:center;font-family:var(--f-mono);font-size:.68rem;padding-bottom:2px}
 .heat .rl{color:var(--ink-2);padding-right:8px;display:flex;align-items:center;white-space:nowrap}
-.heat .c{height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-variant-numeric:tabular-nums;cursor:default}
+.heat .c{height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-variant-numeric:tabular-nums;cursor:default}
 .heat .c.est{outline:1.5px dashed color-mix(in srgb,var(--ink) 35%,transparent);outline-offset:-3px;font-style:italic}
 .heat .c.sel{box-shadow:0 0 0 2px var(--accent)}
-.heat .c.na{background:transparent;color:var(--muted)}
+.heat .c.na{background:transparent;border:1px dashed var(--line)}
+.heat .h{white-space:nowrap;overflow:visible}
 .heatleg{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:.78rem;color:var(--muted);flex-wrap:wrap}
 .heatleg i{width:22px;height:10px;border-radius:2px;display:inline-block}
 
@@ -766,7 +767,7 @@ function renderReport(){
         ${mtErr?`<p class="h-err">${esc(mtErr)}</p>`:''}<div class="row"><span class="hint">Eén punt per regel.</span><button type="button" class="btn-ghost" data-mt="cancel">Annuleer</button><button type="button" class="btn-h" data-mt="save" data-k="${k}" ${mtSaving?'disabled':''}>${mtSaving?'Bewaren…':'Bewaar'}</button></div></div>`
       :(lines&&lines.length?'<ul>'+lines.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'
         :(def[k]&&def[k].length?'<ul>'+def[k].map(x=>'<li>'+x+'</li>').join('')+'</ul>':'<p class="empty">Nog niet ingevuld voor '+lblLong(i)+'.</p>'));
-    const tag=has?(t.bron==='claude'?'<span class="mt-tag claude">voorstel van Claude · na te kijken</span>':t.bron==='maandmail'?'<span class="mt-tag">uit de maandmail van Kato'+(t.bijgewerkt?' · '+fmtDate(t.bijgewerkt):'')+'</span>':'<span class="mt-tag kato">nagekeken door Kato'+(t.bijgewerkt?' · '+fmtDate(t.bijgewerkt):'')+'</span>')
+    const tag=has?(t.bron==='claude'?'<span class="mt-tag claude">voorstel van Claude · na te kijken</span>':t.bron==='maandmail'?'<span class="mt-tag">uit de maandmail van Kato'+(t.bijgewerkt?' van '+fmtDate(t.bijgewerkt):'')+'</span>':'<span class="mt-tag kato">nagekeken door Kato'+(t.bijgewerkt?' · '+fmtDate(t.bijgewerkt):'')+'</span>')
       :(def[k]&&def[k].length?'<span class="mt-tag">uit de maandmail</span>':'');
     return `<div class="rcol"><div class="rcol-h"><div><span class="eyebrow">${h[0]}</span><h3 style="margin-top:2px">${h[1]}</h3></div>${can&&editVak!==k?`<button type="button" class="btn-ghost mt-edit" data-mt="edit" data-k="${k}">Bewerk</button>`:''}</div>
     ${k===0?strip:''}${body}${tag&&editVak!==k?`<div>${tag}</div>`:''}</div>`;}).join('');
@@ -862,19 +863,19 @@ function renderHeat(){
     ['Sessies',sess,sessR,int,false],
     ['Conversie %',months.map((_,i)=>cr(i)),new Set(months.map((_,i)=>crR(i)?i:-1)),v=>pct(v),false]];
   const seq=['--seq-0','--seq-1','--seq-2','--seq-3','--seq-4'].map(css);
-  let h=`<div class="h"></div>`+months.map((_,i)=>`<div class="h">${lbl(i)}</div>`).join('');
+  let h=`<div class="h"></div>`+months.map((_,i)=>`<div class="h">${months[i].m%3===0||i===sel?lbl(i):''}</div>`).join('');
   rows.forEach(([name,arr,rs,f])=>{
     const vals=arr.filter(v=>v!=null);const mn=Math.min(...vals),mx=Math.max(...vals);
     h+=`<div class="rl">${name}</div>`;
     arr.forEach((v,i)=>{
-      if(v==null){h+=`<div class="c na" title="${name} ${lblLong(i)}: nog niet aangeleverd">·</div>`;return;}
+      if(v==null){h+=`<div class="c na" title="${name} ${lblLong(i)}: nog niet aangeleverd"></div>`;return;}
       const t=mx===mn?.5:(v-mn)/(mx-mn);const b=Math.min(4,Math.floor(t*5));
       const fg=b>=3?'#fff':css('--ink');
-      h+=`<div class="c ${rs.has(i)?'':'est'} ${i===sel?'sel':''}" data-i="${i}" style="background:${seq[b]};color:${fg}" title="${name} ${lblLong(i)}: ${f(v)}${rs.has(i)?'':' (illustratief)'}">${f(v)}</div>`;
+      h+=`<div class="c ${rs.has(i)?'':'est'} ${i===sel?'sel':''}" data-i="${i}" style="background:${seq[b]};color:${fg}" title="${name} ${lblLong(i)}: ${f(v)}${rs.has(i)?'':' (illustratief)'}"></div>`;
     });
   });
   const el=document.getElementById('heat');
-  el.style.gridTemplateColumns=`120px repeat(${N},minmax(34px,1fr))`;
+  el.style.gridTemplateColumns=`130px repeat(${N},minmax(14px,1fr))`;
   el.innerHTML=h;
   el.querySelectorAll('.c[data-i]').forEach(c=>c.addEventListener('click',()=>setSel(+c.dataset.i)));
 }
@@ -897,7 +898,7 @@ function renderTable(){
 const ASIDE={
   trend:`<b>Wanneer gebruiken</b><span>Om het verloop te zien en pieken te koppelen aan gebeurtenissen. Alle leads, de leads via advertenties en de SQL's staan op dezelfde schaal. Zo zie je welk deel de advertenties aanbrengen en hoeveel er een echte offerteaanvraag worden.</span><b>Let op</b><span>Een stippellijn en een open punt betekenen een illustratieve waarde. Klik op een punt om die maand te openen.</span>`,
   yoy:`<b>Wanneer gebruiken</b><span>Voor Wouts vraag "doen we het beter dan vorig jaar?". Seizoen valt weg omdat je dezelfde maand vergelijkt: februari met februari, met Batibouw in beide jaren.</span><b>Let op</b><span>2026 loopt tot augustus. De geselecteerde maand staat in volle kleur. Elk cijfer kan je zo vergelijken, ook sessies en conversiepercentage. Bij een percentage zie je het verschil in procentpunt (pp).</span>`,
-  heat:`<b>Wanneer gebruiken</b><span>Om in één oogopslag alle cijfers over alle maanden te scannen. Donker = hoog binnen die rij. Handig om uitschieters te spotten, bijvoorbeeld een dure maand die ook weinig leads opleverde.</span><b>Let op</b><span>Elke rij heeft een eigen schaal. Vergelijk kleuren enkel binnen een rij.</span>`,
+  heat:`<b>Wanneer gebruiken</b><span>Om in één oogopslag alle cijfers over alle maanden te scannen. Donker = hoog binnen die rij. Handig om uitschieters te spotten, bijvoorbeeld een dure maand die ook weinig leads opleverde.</span><b>Let op</b><span>Elke rij heeft een eigen schaal. Vergelijk kleuren enkel binnen een rij. Beweeg over een vakje voor het exacte cijfer, klik om naar die maand te gaan.</span>`,
   table:`<b>Wanneer gebruiken</b><span>Voor wie de exacte getallen wil overnemen of narekenen. Nieuwste maand bovenaan. Cursief = illustratief.</span><b>Let op</b><span>Dit is ook de toegankelijke versie van alle grafieken.</span>`
 };
 function renderView(){
